@@ -18,10 +18,16 @@ public class MediaServiceImpl implements MediaService {
     public Medium[] getDiscs(){
         return null;
     }
-    public MediaServiceResult updateBook(Book  b){
+    public MediaServiceResult updateBook(String isbn, Book  b){
         return null;
     }
-    public MediaServiceResult updateDisc(Disc d){
+    public MediaServiceResult updateDisc(String barcode, Disc d){
         return null;
+    }
+    public Book getBook(String isbn) {
+    	return null;
+    }
+    public Disc getDisc(String barcode) {
+    	return null;
     }
 }
