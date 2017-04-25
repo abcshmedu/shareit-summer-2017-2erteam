@@ -14,6 +14,8 @@ public class Book extends Medium {
      */
     public Book() {
         super("");
+        author="";
+        isbn="";
     }
     
     /**

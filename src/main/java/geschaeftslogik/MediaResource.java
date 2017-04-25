@@ -10,11 +10,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.json.JSONObject;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import datenzugriffsschicht.Book;
-import datenzugriffsschicht.Disc;
+import datenzugriffsschicht.*;
 
 /**
  * The class MediaResource hands off JSON Objects to the service.
@@ -24,7 +25,7 @@ import datenzugriffsschicht.Disc;
 @Path("/media")
 public class MediaResource {
 
-    private MediaService mediaService;
+    private final MediaService mediaService;
     
     /**
      * Constructs a media service.
@@ -43,8 +44,12 @@ public class MediaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createBook(Book b) {
-        return Response.status(Response.Status.OK)
-                .entity(objToJson(mediaService.addBook(b)))
+        System.out.println("got called");
+        MediaServiceResult res = mediaService.addBook(b);
+        // wird wohl automatisch von JSON zu nem Objekt umgewandelt...
+        return Response
+                .status(res.getStatus())
+                .entity(objToJson(res))
                 .build();
     }
     
@@ -68,7 +73,11 @@ public class MediaResource {
      */
     @GET
     @Path("/books/{isbn}")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getBook(@PathParam("isbn")String isbn) {
+        // 1. ask Service for a specific Book (isbn) after de-serializing
+        // 2. serialize the Book
+        // 3. forward the serialized answer
         return Response.status(Response.Status.OK)
                 .entity(objToJson(mediaService.getBook(isbn)))
                 .build();
@@ -85,6 +94,10 @@ public class MediaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateBook(@PathParam("isbn") String isbn, Book b) {
+        // 1. de-serialize the received JSON to make an Object
+        // 2. call the Service1 (to update that Object)
+        // 3. serialize Services answer
+        // 4. forward serialized answer
         return Response.status(Status.OK)
                 .entity(objToJson(mediaService.updateBook(isbn, b)))
                 .build();
@@ -157,6 +170,7 @@ public class MediaResource {
         String result = "";
         try {
             result = mapper.writeValueAsString(o);
+            System.out.println(result);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

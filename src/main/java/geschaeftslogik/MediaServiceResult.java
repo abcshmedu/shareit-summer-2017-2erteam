@@ -8,7 +8,7 @@ import javax.ws.rs.core.Response.Status;
  *
  */
 public enum MediaServiceResult {
-    FEHLER;
+    FEHLER,OK;
     
     /**
      * @return code
