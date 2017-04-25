@@ -1,19 +1,33 @@
 package datenzugriffsschicht;
 
-public class Book extends Medium{
-    String author;
-    String isbn;
+/**
+ * Represents a book as a Medium.
+ * @author Altvatter Robert, Groﬂbeck Thomas
+ *
+ */
+public class Book extends Medium {
+    private String author;
+    private String isbn;
+    
+    /**
+     * Constructs a book as a medium.
+     */
     public Book() {
         super("");
     }
-    public Book(String title, String author, String isbn){
+    
+    /**
+     * Constructs a book with title, author and isbn.
+     * @param title of the book
+     * @param author of the book
+     * @param isbn of the book
+     */
+    public Book(String title, String author, String isbn) {
         super(title);
         this.author = author;
         this.isbn = isbn;
     }
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -22,34 +36,36 @@ public class Book extends Medium{
         result = prime * result + ((isbn == null) ? 0 : isbn.hashCode());
         return result;
     }
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
+
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (!super.equals(obj))
+        }
+        if (!super.equals(obj)) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         Book other = (Book) obj;
         if (author == null) {
-            if (other.author != null)
+            if (other.author != null) {
                 return false;
-        } else if (!author.equals(other.author))
+            }
+        } else if (!author.equals(other.author)) {
             return false;
+        }
         if (isbn == null) {
-            if (other.isbn != null)
+            if (other.isbn != null) {
                 return false;
-        } else if (!isbn.equals(other.isbn))
+            }
+        } else if (!isbn.equals(other.isbn)) {
             return false;
+        }
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return "Book [author=" + author + ", isbn=" + isbn + "]";

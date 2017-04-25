@@ -2,12 +2,25 @@ package geschaeftslogik;
 
 import javax.ws.rs.core.Response.Status;
 
+/**
+ * enum with status codes.
+ * @author Altvatter Robert, Großbeck Thomas
+ *
+ */
 public enum MediaServiceResult {
     FEHLER;
-    public int getCode(){
+    
+    /**
+     * @return code
+     */
+    public int getCode() {
         return 200;
     }
-    public Status getStatus(){
+    
+    /**
+     * @return status
+     */
+    public Status getStatus() {
         return Status.OK;
     }
     

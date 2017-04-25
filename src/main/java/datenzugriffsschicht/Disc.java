@@ -1,21 +1,37 @@
 package datenzugriffsschicht;
 
-public class Disc extends Medium{
-    String barcode;
-    String director;
-    int fsk;
-    public Disc(){
+/**
+ * Represents a disc as a medium.
+ * @author Altvatter Robert, Groﬂbeck Thomas
+ *
+ */
+public class Disc extends Medium {
+
+    private String barcode;
+    private String director;
+    private int fsk;
+    
+    /**
+     * Constructs a disc.
+     */
+    public Disc() {
         super("");
     }
-    public Disc(String title, String barcode, int fsk, String director){
+    
+    /**
+     * Constructs a disc with title, barcode, fsk and director.
+     * @param title of the disc
+     * @param barcode of the disc
+     * @param fsk of the disc
+     * @param director of the disc
+     */
+    public Disc(String title, String barcode, int fsk, String director) {
         super(title);
         this.barcode = barcode;
         this.director = director;
         this.fsk = fsk;
     }
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
+
     @Override
     public String toString() {
         return "Disc [barcode=" + barcode + ", director=" + director + ", fsk=" + fsk + "]";
@@ -38,9 +54,7 @@ public class Disc extends Medium{
     public int getFsk() {
         return fsk;
     }
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -50,30 +64,36 @@ public class Disc extends Medium{
         result = prime * result + fsk;
         return result;
     }
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
+
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (!super.equals(obj))
+        }
+        if (!super.equals(obj)) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         Disc other = (Disc) obj;
         if (barcode == null) {
-            if (other.barcode != null)
+            if (other.barcode != null) {
                 return false;
-        } else if (!barcode.equals(other.barcode))
+            }
+        } else if (!barcode.equals(other.barcode)) {
             return false;
+        }
         if (director == null) {
-            if (other.director != null)
+            if (other.director != null) {
                 return false;
-        } else if (!director.equals(other.director))
+            }
+        } else if (!director.equals(other.director)) {
             return false;
-        if (fsk != other.fsk)
+        }
+        if (fsk != other.fsk) {
             return false;
+        }
         return true;
     }
 }

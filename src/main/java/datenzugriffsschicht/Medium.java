@@ -1,11 +1,26 @@
 package datenzugriffsschicht;
 
+/**
+ * Represents a Medium in the service.
+ * @author Altvatter Robert, Groﬂbeck Thomas
+ *
+ */
 public abstract class Medium {
-    protected String title;
-    public Medium(String s){
-        title = s;
+
+    private String title;
+    
+    /**
+     * Constructs a medium with a title.
+     * @param title of the medium
+     */
+    public Medium(String title) {
+        this.title = title;
     }
-    public String getTitle(){
+    
+    /**
+     * @return title of the medium
+     */
+    public String getTitle() {
         return title;
     }
     @Override
@@ -17,21 +32,30 @@ public abstract class Medium {
     }
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         Medium other = (Medium) obj;
         if (title == null) {
-            if (other.title != null)
+            if (other.title != null) {
                 return false;
-        } else if (!title.equals(other.title))
+            }
+        } else if (!title.equals(other.title)) {
             return false;
+        }
         return true;
     }
-    public String toString(){
+    
+    /**
+     * @return a string representation of a medium
+     */
+    public String toString() {
         return "Medium: " + title;
     }
 
