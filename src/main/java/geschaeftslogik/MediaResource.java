@@ -1,6 +1,7 @@
 package geschaeftslogik;
 import javax.ws.rs.core.Response;
-import datenzugriffsschicht.*;
+
+import datenzugriffsschicht.Book;
 
 public class MediaResource {
     MediaResource(){}
@@ -10,7 +11,7 @@ public class MediaResource {
     Response getBooks(){
         return null;
     }
-    Response getBook(String title){
+    Response getBook(String isbn){
         return null;
     }
     Response updateBook(Book b){

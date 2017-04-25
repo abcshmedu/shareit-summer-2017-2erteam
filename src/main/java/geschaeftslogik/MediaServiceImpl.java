@@ -1,6 +1,8 @@
 package geschaeftslogik;
 
-import datenzugriffsschicht.*;
+import datenzugriffsschicht.Book;
+import datenzugriffsschicht.Disc;
+import datenzugriffsschicht.Medium;
 
 public class MediaServiceImpl implements MediaService {
     public MediaServiceImpl(){}

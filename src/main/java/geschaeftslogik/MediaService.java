@@ -1,6 +1,8 @@
 package geschaeftslogik;
-import datenzugriffsschicht.*;
-import api_schicht.*;
+import datenzugriffsschicht.Book;
+import datenzugriffsschicht.Disc;
+import datenzugriffsschicht.Medium;
+
 public interface MediaService {
     MediaServiceResult addBook(Book b);
     MediaServiceResult addDisc(Disc d);
