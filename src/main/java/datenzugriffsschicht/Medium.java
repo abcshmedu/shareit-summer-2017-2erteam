@@ -23,6 +23,15 @@ public abstract class Medium {
     public String getTitle() {
         return title;
     }
+    
+    /**
+     * Sets the title.
+     * @param title of a medium
+     */
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    
     @Override
     public int hashCode() {
         final int prime = 31;

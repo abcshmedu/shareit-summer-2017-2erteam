@@ -16,6 +16,9 @@ public class Disc extends Medium {
      */
     public Disc() {
         super("");
+        barcode = "";
+        director = "";
+        fsk = 0;
     }
     
     /**
@@ -53,6 +56,22 @@ public class Disc extends Medium {
      */
     public int getFsk() {
         return fsk;
+    }
+    
+    /**
+     * Sets the director.
+     * @param director of the disc
+     */
+    public void setDirector(String director) {
+        this.director = director;
+    }
+    
+    /**
+     * Sets the fsk.
+     * @param fsk of the disc
+     */
+    public void setFsk(int fsk) {
+        this.fsk = fsk;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package geschaeftslogik;
 
-import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.Response;
 
 /**
  * enum with status codes.
@@ -8,20 +8,36 @@ import javax.ws.rs.core.Response.Status;
  *
  */
 public enum MediaServiceResult {
-    FEHLER,OK;
+    OK(Response.Status.OK.getStatusCode(), "successful"),
+    BAD_REQUEST(Response.Status.BAD_REQUEST.getStatusCode(), "Ungültige Angaben"),
+    NOT_FOUND(Response.Status.NOT_FOUND.getStatusCode(), "Medium nicht gefunden"),
+    CONFLICT(Response.Status.CONFLICT.getStatusCode(), "Medium bereits vorhanden");
+    
+    private String status;
+    private int code;
+    
+    /**
+     * Constructs a MediaServiceResult.
+     * @param code of the result
+     * @param status of the result
+     */
+    MediaServiceResult(int code, String status) {
+        this.code = code;
+        this.status = status;
+    }
     
     /**
      * @return code
      */
     public int getCode() {
-        return 200;
+        return code;
     }
     
     /**
      * @return status
      */
-    public Status getStatus() {
-        return Status.OK;
+    public String getStatus() {
+        return status;
     }
     
     

@@ -14,7 +14,7 @@ public class Copy {
      * @param owner of the copy
      * @param toCopy the medium to copy
      */
-    Copy(String owner, Medium toCopy) {
+    public Copy(String owner, Medium toCopy) {
         medium = toCopy;
         this.owner = owner;
     }

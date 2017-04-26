@@ -10,7 +10,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.json.JSONObject;
+//import org.json.JSONObject;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,7 +48,7 @@ public class MediaResource {
         MediaServiceResult res = mediaService.addBook(b);
         // wird wohl automatisch von JSON zu nem Objekt umgewandelt...
         return Response
-                .status(res.getStatus())
+                .status(res.getCode())
                 .entity(objToJson(res))
                 .build();
     }
@@ -113,7 +113,8 @@ public class MediaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createDisc(Disc d) {
-        return Response.status(Response.Status.OK)
+        MediaServiceResult res = mediaService.addDisc(d);
+        return Response.status(res.getCode())
                 .entity(objToJson(mediaService.addDisc(d)))
                 .build();
     }
@@ -138,6 +139,7 @@ public class MediaResource {
      */
     @GET
     @Path("/discs/{barcode}")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getDisc(@PathParam("barcode")String barcode) {
         return Response.status(Response.Status.OK)
                 .entity(objToJson(mediaService.getDisc(barcode)))

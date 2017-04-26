@@ -14,8 +14,8 @@ public class Book extends Medium {
      */
     public Book() {
         super("");
-        author="";
-        isbn="";
+        author = "";
+        isbn = "";
     }
     
     /**
@@ -83,6 +83,14 @@ public class Book extends Medium {
      */
     public String getIsbn() {
         return isbn;
+    }
+    
+    /**
+     * Sets the author.
+     * @param author of the book
+     */
+    public void setAuthor(String author) {
+        this.author = author;
     }
     
 }
