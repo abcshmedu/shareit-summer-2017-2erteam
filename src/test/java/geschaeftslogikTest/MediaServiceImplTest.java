@@ -38,7 +38,7 @@ public class MediaServiceImplTest {
         media = new MediaServiceImpl();
     }
 
-//Books
+//Discs
 //******************************************************************************************
     @Test
     public void testAddDiscOk() {
@@ -81,13 +81,13 @@ public class MediaServiceImplTest {
     }
     
     @Test
-    public void testUpdateBookNotFound() {
+    public void testUpdateDiscNotFound() {
         MediaServiceResult res = media.updateBook("3", new Book("NewTitle", "NewAutor", "3"));
         assertEquals(res.getCode(), Status.NOT_FOUND.getStatusCode());
     }
     
     @Test
-    public void testUpdateBookBadRequest() {
+    public void testUpdateDiscBadRequest() {
         MediaServiceResult res = media.updateBook("1", new Book("", "", "1"));
         assertEquals(res.getCode(), Status.BAD_REQUEST.getStatusCode());
     }
