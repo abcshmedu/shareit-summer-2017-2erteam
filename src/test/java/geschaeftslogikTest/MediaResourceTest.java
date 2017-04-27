@@ -17,15 +17,24 @@ import geschaeftslogik.MediaResource;
  */
 public class MediaResourceTest {
 //CHECKSTYLE:OFF
+    private MediaResource media = new MediaResource();
+    
     @Test
-    public void testCreateBook() {
-        MediaResource media = new MediaResource();
+    public void testCreateBookOk() {
         Response res = media.createBook(new Book("TestTitel", "TestAutor", "1234"));
         assertEquals(res.getStatus(), Status.OK.getStatusCode());
-        Response res2 = media.createBook(new Book("TestTitel", "TestAutor", "1234"));
-        assertEquals(res2.getStatus(), Status.CONFLICT.getStatusCode());
-        Response res3 = media.createBook(new Book("", "", "1234"));
-        assertEquals(res3.getStatus(), Status.BAD_REQUEST.getStatusCode());
+    }
+    
+    @Test 
+    public void testCreateBookConflict() {
+        Response res = media.createBook(new Book("TestTitel", "TestAutor", "1234"));
+        assertEquals(res.getStatus(), Status.CONFLICT.getStatusCode());
+    }
+    
+    @Test
+    public void testCreateBookBadRequest() {
+        Response res = media.createBook(new Book("", "", "1234"));
+        assertEquals(res.getStatus(), Status.BAD_REQUEST.getStatusCode());
     }
     
     @Test
