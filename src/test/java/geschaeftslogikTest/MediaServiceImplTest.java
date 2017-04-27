@@ -6,5 +6,5 @@ package geschaeftslogikTest;
  *
  */
 public class MediaServiceImplTest {
-
+//CHECKSTYLE:OFF
 }
