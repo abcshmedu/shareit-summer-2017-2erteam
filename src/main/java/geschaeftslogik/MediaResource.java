@@ -10,6 +10,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.json.JSONObject;
+
 //import org.json.JSONObject;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -47,9 +49,12 @@ public class MediaResource {
         System.out.println("got called");
         MediaServiceResult res = mediaService.addBook(b);
         // wird wohl automatisch von JSON zu nem Objekt umgewandelt...
+        JSONObject jo = new JSONObject();
+        jo.put("detail", res.getStatus());
+        jo.put("code", res.getCode());
         return Response
                 .status(res.getCode())
-                .entity(objToJson(res))
+                .entity(jo.toString())
                 .build();
     }
     
