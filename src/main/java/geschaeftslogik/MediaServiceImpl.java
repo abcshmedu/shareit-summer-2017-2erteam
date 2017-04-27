@@ -94,15 +94,24 @@ public class MediaServiceImpl implements MediaService {
     @Override
     public MediaServiceResult updateBook(String isbn, Book  b) {
         Book toUpdate = getBook(isbn);
-        if (toUpdate.equals(null)) {
+        if (!vorhanden(isbn)) {
             return MediaServiceResult.NOT_FOUND;
         }
-        if (!("".equals(b.getIsbn())) || ("".equals(b.getAuthor()) && "".equals(b.getTitle()))) {
+        if (!(isbn.equals(b.getIsbn())) || ("".equals(b.getAuthor()) && "".equals(b.getTitle()))) {
             return MediaServiceResult.BAD_REQUEST;
         }
         toUpdate.setAuthor(b.getAuthor());
         toUpdate.setTitle(b.getTitle());
         return MediaServiceResult.OK;
+    }
+    
+    public boolean vorhanden(String isbn) {
+        for (Book b : books) {
+            if (b.getIsbn().equals(isbn)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     @Override
@@ -111,7 +120,7 @@ public class MediaServiceImpl implements MediaService {
         if (toUpdate.equals(null)) {
             return MediaServiceResult.NOT_FOUND;
         }
-        if (!("".equals(d.getBarcode())) || ("".equals(d.getDirector()) && "".equals(d.getTitle()))) {
+        if (!(barcode.equals(d.getBarcode())) || ("".equals(d.getDirector()) && "".equals(d.getTitle()))) {
             return MediaServiceResult.BAD_REQUEST;
         }
         toUpdate.setDirector(d.getDirector());

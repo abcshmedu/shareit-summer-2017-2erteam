@@ -35,6 +35,38 @@ var submitNewBook = function() {
         	errorText.removeClass("hidden");
         });
 }
+/**
+ * This function is used for transfer of new disc info.
+ */
+var newDisc = function() {
+	var json = JSON.stringify({
+			title: $("input[name=title]").val(),
+			director: $("input[name=director]").val(),
+			barcode: $("input[name=barcode]").val(),
+			fsk: $("input[name=fsk]").val()
+	});
+	var errorText = $("#errormessage");
+    $.ajax({
+        url: '/shareit/media/discs/',
+        type:'POST',
+        contentType: 'application/json; charset=UTF-8',
+        data: json
+        })
+        .done(() => {
+			$("input[name=title]").val("");
+			$("input[name=direcctor]").val("");
+			$("input[name=barcode]").val("");
+			$("input[name=fsk]").val("");
+        	
+        	errorText.removeClass("visible");
+        	errorText.addClass("hidden");
+        })
+        .fail((error) => {
+        	errorText.addClass("visible");
+        	errorText.text(error.responseJSON.detail);
+        	errorText.removeClass("hidden");
+        });
+}
 
 /**
  * Creates a list of all books using a Mustache-template.
@@ -51,7 +83,135 @@ var listBooks = function() {
 		$("#content").html(output);
 	});// no error handling
 }
-
+/**
+ * Creates a list of all discs using a Mustache-template.
+ */
+var listDiscs = function() {
+	$.ajax({
+        url: '/shareit/media/discs',
+        type:'GET'
+	})
+	.done((data) => {
+		var template = "<table class='u-full-width'><tbody>{{#data}}<tr><td>{{title}}</td><td>{{director}}</td><td>{{barcode}}</td><td>{{fsk}}</td></tr>{{/data}}</tbody></table>";
+		Mustache.parse(template);
+		var output = Mustache.render(template, {data: data});
+		$("#content").html(output);
+	});// no error handling
+}
+/**
+* update a Disc
+*/
+var updateDisc = function() {
+	var json = JSON.stringify({
+			title: $("input[name=title]").val(),
+			director: $("input[name=director]").val(),
+			barcode: $("input[name=barcode]").val(),
+			fsk: $("input[name=fsk]").val()
+	});
+	var errorText = $("#errormessage");
+    $.ajax({
+        url: '/shareit/media/discs/'+barcode,
+        type:'PUT',
+        contentType: 'application/json; charset=UTF-8',
+        data: json
+        })
+        .done(() => {
+			title: $("input[name=title]").val("");
+			director: $("input[name=director]").val("");
+			barcode: $("input[name=barcode]").val("");
+			fsk: $("input[name=fsk]").val("");
+        	
+        	errorText.removeClass("visible");
+        	errorText.addClass("hidden");
+        })
+        .fail((error) => {
+        	errorText.addClass("visible");
+        	errorText.text(error.responseJSON.detail);
+        	errorText.removeClass("hidden");
+        });
+}
+/**
+* update a Disc
+*/
+var updateBook = function() {
+	var json = JSON.stringify({
+			title: $("input[name=title]").val(),
+			author: $("input[name=author]").val(),
+			isbn: $("input[name=isbn]").val()
+	});
+	var errorText = $("#errormessage");
+    $.ajax({
+        url: '/shareit/media/books/'+isbn,
+        type:'PUT',
+        contentType: 'application/json; charset=UTF-8',
+        data: json
+        })
+        .done(() => {
+			$("input[name=title]").val("");
+			$("input[name=author]").val("");
+			$("input[name=isbn]").val("");
+        	
+        	errorText.removeClass("visible");
+        	errorText.addClass("hidden");
+        })
+        .fail((error) => {
+        	errorText.addClass("visible");
+        	errorText.text(error.responseJSON.detail);
+        	errorText.removeClass("hidden");
+        });
+}
+/**
+* gets a Book by its ISBN
+*/
+var getBook = function() {
+	var json = JSON.stringify({
+			isbn: $("input[name=isbn]").val()
+	});
+	var errorText = $("#errormessage");
+    $.ajax({
+        url: '/shareit/media/books/'+isbn,
+        type:'GET',
+        contentType: 'application/json; charset=UTF-8',
+        data: json
+        })
+        .done(() => {
+			var template = "<table class='u-full-width'><tbody>{{#data}}<tr><td>{{title}}</td><td>{{author}}</td><td>{{isbn}}</td></tr>{{/data}}</tbody></table>";
+			Mustache.parse(template);
+			var output = Mustache.render(template, {data: data});
+			$("#content").html(output);
+        })
+        .fail((error) => {
+        	errorText.addClass("visible");
+        	errorText.text(error.responseJSON.detail);
+        	errorText.removeClass("hidden");
+        });
+}
+/**
+* gets a Disc by its barcode
+*/
+var getDisc = function() {
+	var json = JSON.stringify({
+			barcode: $("input[name=barcode]").val()
+	});
+	var errorText = $("#errormessage");
+    $.ajax({
+        url: '/shareit/media/books/'+barcode,
+        type:'GET',
+        contentType: 'application/json; charset=UTF-8',
+        data: json
+        })
+        .done(() => {
+			var template = "<table class='u-full-width'><tbody>{{#data}}<tr><td>{{title}}</td><td>{{director}}</td><td>{{barcode}}</td><td>{{fsk}}</td></tr>{{/data}}</tbody></table>";
+			Mustache.parse(template);
+			var output = Mustache.render(template, {data: data});
+			$("#content").html(output);
+        })
+        .fail((error) => {
+        	errorText.addClass("visible");
+        	errorText.text(error.responseJSON.detail);
+        	errorText.removeClass("hidden");
+        });
+}
 /**
  * Call backer for "navigational buttons" in left column. Used to set content in main part.
  */

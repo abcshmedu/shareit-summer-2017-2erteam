@@ -1,15 +1,17 @@
 package geschaeftslogikTest;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import datenzugriffsschicht.Book;
-import geschaeftslogik.MediaResource;
+import datenzugriffsschicht.Disc;
+import geschaeftslogik.MediaService;
+import geschaeftslogik.MediaServiceImpl;
+import geschaeftslogik.MediaServiceResult;
 
 /**
  * JUnit Test for the class MediaServiceImpl.
@@ -19,29 +21,71 @@ import geschaeftslogik.MediaResource;
 public class MediaServiceImplTest {
 //CHECKSTYLE:OFF
 
-    private MediaResource media;
+    private MediaService media;
+    
+    private Book[] books = {
+            new Book("a", "a", "1"),
+            new Book("b", "b", "2")
+    };
+    
+    private Disc[] discs = {
+       new Disc("TestTitel", "1234", 0, "TestDirector"),
+       new Disc("TestTitel2", "5678", 0, "TestDirector")
+    };
     
     @Before
     public void setUp() {
-        media = new MediaResource();
+        media = new MediaServiceImpl();
     }
 
     @Test
     public void testAddBookOk() {
-        Response res = media.createBook(new Book("TestTitel", "TestAutor", "12345"));
-        assertEquals(res.getStatus(), Status.OK.getStatusCode());
+        MediaServiceResult res = media.addBook(new Book("TestTitel", "TestAutor", "12345"));
+        assertEquals(res.getCode(), Status.OK.getStatusCode());
     }
     
     @Test 
     public void testAddBookConflict() {
-        Response res = media.createBook(new Book("TestTitel", "TestAutor", "1234"));
-        Response res2 = media.createBook(new Book("TestTitel", "TestAutor", "1234"));
-        assertEquals(res2.getStatus(), Status.CONFLICT.getStatusCode());
+        MediaServiceResult res = media.addBook(new Book("TestTitel", "TestAutor", "1234"));
+        MediaServiceResult res2 = media.addBook(new Book("TestTitel", "TestAutor", "1234"));
+        assertEquals(res2.getCode(), Status.CONFLICT.getStatusCode());
     }
     
     @Test
     public void testAddBookBadRequest() {
-        Response res = media.createBook(new Book("", "", "1234"));
-        assertEquals(res.getStatus(), Status.BAD_REQUEST.getStatusCode());
+        MediaServiceResult res = media.addBook(new Book("", "", "1234"));
+        assertEquals(res.getCode(), Status.BAD_REQUEST.getStatusCode());
+    }
+    
+    @Test
+    public void testGetBooks() {
+        Book book1 = new Book("a", "a", "1");
+        Book book2 = new Book("b", "b", "2");
+        media.addBook(book1);
+        media.addBook(book2);
+        assertEquals(media.getBooks(), books);
+    }
+    
+    @Test
+    public void testGetBook() {
+        assertEquals(media.getBook("1"), books[0]);
+        assertEquals(media.getBook("3"), null);
+    }
+    
+    @Test
+    public void testUpdateBookOk() {
+        MediaServiceResult res = media.updateBook("1", new Book("NewTitle", "NewAutor", "1"));
+        assertEquals(res.getCode(), Status.OK.getStatusCode());
+    }
+    
+    @Test
+    public void testUpdateBookNotFound() {
+        MediaServiceResult res = media.updateBook("3", new Book("NewTitle", "NewAutor", "3"));
+        assertEquals(res.getCode(), Status.NOT_FOUND.getStatusCode());
+    }
+    
+    @Test
+    public void testUpdateBookBadRequest() {
+        
     }
 }

@@ -1,0 +1,6 @@
+	      <h2>ShareIt</h2>
+		   <table border="0"><tbody>
+			   <tr><td><label for="barcode">barcode:</label></td> <td><input type="text" name="barcode"></td></tr>
+	       </tbody></table>
+		  <div><span id="errormessage" class="hidden error">ERROR</span></div>
+		  <input type="button" class="button-primary" id="getButton" onclick="getDisc()" value="getDisc"/>
