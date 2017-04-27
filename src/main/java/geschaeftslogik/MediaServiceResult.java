@@ -17,6 +17,14 @@ public enum MediaServiceResult {
     private int code;
     
     /**
+     * Defaultconstructor.
+     */
+    MediaServiceResult() {
+        code = 0;
+        status = "";
+    }
+    
+    /**
      * Constructs a MediaServiceResult.
      * @param code of the result
      * @param status of the result
