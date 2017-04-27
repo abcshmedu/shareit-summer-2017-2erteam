@@ -94,7 +94,8 @@ public class MediaServiceImpl implements MediaService {
     @Override
     public MediaServiceResult updateBook(String isbn, Book  b) {
         Book toUpdate = getBook(isbn);
-        if (!vorhanden(isbn)) {
+        if (!searchBook(isbn)) {
+            System.out.println(isbn);
             return MediaServiceResult.NOT_FOUND;
         }
         if (!(isbn.equals(b.getIsbn())) || ("".equals(b.getAuthor()) && "".equals(b.getTitle()))) {
@@ -105,9 +106,28 @@ public class MediaServiceImpl implements MediaService {
         return MediaServiceResult.OK;
     }
     
-    public boolean vorhanden(String isbn) {
+    /**
+     * Returns true if the book is in the system.
+     * @param isbn of the book
+     * @return true if the book is in the system.
+     */
+    public boolean searchBook(String isbn) {
         for (Book b : books) {
             if (b.getIsbn().equals(isbn)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Returns true if the disc is in the system.
+     * @param barcode of the disc
+     * @return true if the disc is in the system.
+     */
+    public boolean searchDisc(String barcode) {
+        for (Disc d : discs) {
+            if (d.getBarcode().equals(barcode)) {
                 return true;
             }
         }
@@ -117,7 +137,7 @@ public class MediaServiceImpl implements MediaService {
     @Override
     public MediaServiceResult updateDisc(String barcode, Disc d) {
         Disc toUpdate = getDisc(barcode);
-        if (toUpdate.equals(null)) {
+        if (!searchDisc(barcode)) {
             return MediaServiceResult.NOT_FOUND;
         }
         if (!(barcode.equals(d.getBarcode())) || ("".equals(d.getDirector()) && "".equals(d.getTitle()))) {

@@ -38,6 +38,61 @@ public class MediaServiceImplTest {
         media = new MediaServiceImpl();
     }
 
+//Books
+//******************************************************************************************
+    @Test
+    public void testAddDiscOk() {
+        MediaServiceResult res = media.addBook(new Book("TestTitel", "TestAutor", "12345"));
+        assertEquals(res.getCode(), Status.OK.getStatusCode());
+    }
+    
+    @Test 
+    public void testAddDiscConflict() {
+        MediaServiceResult res = media.addBook(new Book("TestTitel", "TestAutor", "1234"));
+        MediaServiceResult res2 = media.addBook(new Book("TestTitel", "TestAutor", "1234"));
+        assertEquals(res2.getCode(), Status.CONFLICT.getStatusCode());
+    }
+    
+    @Test
+    public void testAddDiscBadRequest() {
+        MediaServiceResult res = media.addBook(new Book("", "", "1234"));
+        assertEquals(res.getCode(), Status.BAD_REQUEST.getStatusCode());
+    }
+    
+    @Test
+    public void testGetDiscs() {
+        Book book1 = new Book("a", "a", "1");
+        Book book2 = new Book("b", "b", "2");
+        media.addBook(book1);
+        media.addBook(book2);
+        assertEquals(media.getBooks(), books);
+    }
+    
+    @Test
+    public void testGetDisc() {
+        assertEquals(media.getBook("1"), books[0]);
+        assertEquals(media.getBook("3"), null);
+    }
+    
+    @Test
+    public void testUpdateDiscOk() {
+        MediaServiceResult res = media.updateBook("1", new Book("NewTitle", "NewAutor", "1"));
+        assertEquals(res.getCode(), Status.OK.getStatusCode());
+    }
+    
+    @Test
+    public void testUpdateBookNotFound() {
+        MediaServiceResult res = media.updateBook("3", new Book("NewTitle", "NewAutor", "3"));
+        assertEquals(res.getCode(), Status.NOT_FOUND.getStatusCode());
+    }
+    
+    @Test
+    public void testUpdateBookBadRequest() {
+        MediaServiceResult res = media.updateBook("1", new Book("", "", "1"));
+        assertEquals(res.getCode(), Status.BAD_REQUEST.getStatusCode());
+    }
+//Discs
+//**************************************************************************************
     @Test
     public void testAddBookOk() {
         MediaServiceResult res = media.addBook(new Book("TestTitel", "TestAutor", "12345"));
@@ -86,6 +141,7 @@ public class MediaServiceImplTest {
     
     @Test
     public void testUpdateBookBadRequest() {
-        
+        MediaServiceResult res = media.updateBook("1", new Book("", "", "1"));
+        assertEquals(res.getCode(), Status.BAD_REQUEST.getStatusCode());
     }
 }
