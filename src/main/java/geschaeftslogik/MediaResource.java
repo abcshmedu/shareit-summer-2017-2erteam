@@ -34,6 +34,10 @@ public class MediaResource {
         mediaService = new MediaServiceImpl();
     }
     
+    /**
+     * Constructors a media service.
+     * @param service media service
+     */
     public MediaResource(MediaService service) {
         mediaService = service;
     }

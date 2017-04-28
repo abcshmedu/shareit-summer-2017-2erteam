@@ -17,6 +17,8 @@ public class MediaServiceImpl implements MediaService {
     private static List<Book> books;
     private static List<Disc> discs;
     
+    public static final int ISBN_LENGTH = 13;
+    
     /**
      * Constructs a MediaService instance.
      */
@@ -101,10 +103,12 @@ public class MediaServiceImpl implements MediaService {
         if (!(isbn.equals(b.getIsbn())) || ("".equals(b.getAuthor()) && "".equals(b.getTitle()))) {
             return MediaServiceResult.BAD_REQUEST;
         }
-        if(!b.getAuthor().isEmpty())
+        if (!b.getAuthor().isEmpty()) {
             toUpdate.setAuthor(b.getAuthor());
-        if(!b.getTitle().isEmpty())
+        }
+        if (!b.getTitle().isEmpty()) {
             toUpdate.setTitle(b.getTitle());
+        }
         return MediaServiceResult.OK;
     }
     
@@ -142,15 +146,18 @@ public class MediaServiceImpl implements MediaService {
         if (!searchDisc(barcode)) {
             return MediaServiceResult.NOT_FOUND;
         }
-        if (!(barcode.equals(d.getBarcode())) || ("".equals(d.getDirector()) && "".equals(d.getTitle()) && (d.getFsk()==-1))) {
+        if (!(barcode.equals(d.getBarcode())) || ("".equals(d.getDirector()) && "".equals(d.getTitle()) && (d.getFsk() == -1))) {
             return MediaServiceResult.BAD_REQUEST;
         }
-        if(!d.getDirector().isEmpty())
+        if (!d.getDirector().isEmpty()) {
             toUpdate.setDirector(d.getDirector());
-        if(!d.getTitle().isEmpty())
+        }
+        if (!d.getTitle().isEmpty()) {
             toUpdate.setTitle(d.getTitle());
-        if(d.getFsk()!=-1)
+        }
+        if (d.getFsk() != -1) {
             toUpdate.setFsk(d.getFsk());
+        }
         return MediaServiceResult.OK;
     }
     
@@ -181,16 +188,17 @@ public class MediaServiceImpl implements MediaService {
      */
     public boolean testCode(String toTest) {
         toTest = toTest.replace("-", "");
-        if (toTest == null || toTest.length()!= 13) {
+        if (toTest == null || toTest.length() != ISBN_LENGTH) {
             return false;
         }
         ArrayList<Integer> ints = convString(toTest);
+        //CHECKSTYLE:OFF
         int result = (ints.get(0) + ints.get(2) + ints.get(4) + ints.get(6) + ints.get(8) + ints.get(10) + ints.get(12) + 3 * (ints.get(1) + ints.get(3) + ints.get(5) + ints.get(7) + ints.get(9) + ints.get(11))) % 10;
+      //CHECKSTYLE:ON
         if (result == 0) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
     
     /**

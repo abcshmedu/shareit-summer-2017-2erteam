@@ -1,6 +1,8 @@
 package geschaeftslogikTest;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.ResourceConfig;
@@ -11,10 +13,14 @@ import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 
 import datenzugriffsschicht.Book;
+import datenzugriffsschicht.Disc;
 import geschaeftslogik.MediaResource;
 import geschaeftslogik.MediaService;
+import geschaeftslogik.MediaServiceResult;
 
 
 /**
@@ -28,7 +34,15 @@ public class MediaResourceTest extends JerseyTest {
     @Mock
     private MediaService serviceMock;
     
-    private Book book = new Book("a", "a", "978-1-4028-9462-6");
+    private Book[] books = {
+            new Book("a", "a", "978-1-4028-9462-6"),
+            new Book("b", "b", "978-3-16-148410-0")
+    };
+    
+    private Disc[] discs = {
+            new Disc("TestTitel", "9781402894626", 0, "TestDirector"),
+            new Disc("TestTitel2", "9783161484100", 0, "TestDirector")            
+    };
 
     @Override
     protected Application configure() {
@@ -38,12 +52,16 @@ public class MediaResourceTest extends JerseyTest {
     
     @Test
     public void testCreateBook() {
-        
+        when(serviceMock.addBook(any(Book.class))).thenReturn(MediaServiceResult.OK);
+        Entity<Book> entity = Entity.entity(books[0], MediaType.APPLICATION_JSON);
+        Response response = target("media/books").request().post(entity);
+        assertEquals(200, response.getStatus());
+        assertEquals("{\"code\":200,\"detail\":\"successful\"}", response.readEntity(String.class));
     }
     
     @Test
     public void testGetBook() {
-        when(serviceMock.getBook("978-1-4028-9462-6")).thenReturn(book);
+        when(serviceMock.getBook("978-1-4028-9462-6")).thenReturn(books[0]);
         Response response = target("media/books/978-1-4028-9462-6").request().get();
         assertEquals(200, response.getStatus());
         assertEquals("{\"title\":\"a\",\"author\":\"a\",\"isbn\":\"978-1-4028-9462-6\"}", response.readEntity(String.class));
@@ -51,32 +69,53 @@ public class MediaResourceTest extends JerseyTest {
     
     @Test
     public void testGetBooks() {
-        
+        when(serviceMock.getBooks()).thenReturn(books);
+        Response response = target("media/books").request().get();
+        assertEquals(200, response.getStatus());
+        assertEquals("[{\"title\":\"a\",\"author\":\"a\",\"isbn\":\"978-1-4028-9462-6\"},{\"title\":\"b\",\"author\":\"b\",\"isbn\":\"978-3-16-148410-0\"}]", response.readEntity(String.class));
     }
     
     @Test
     public void testUpdateBook() {
-        
+        when(serviceMock.updateBook(eq("978-1-4028-9462-6"), any(Book.class))).thenReturn(MediaServiceResult.OK);
+        Entity<Book> entity = Entity.entity(books[0], MediaType.APPLICATION_JSON);
+        Response response = target("media/books/978-1-4028-9462-6").request().put(entity);
+        assertEquals(200, response.getStatus());
+        assertEquals("{\"code\":200,\"detail\":\"successful\"}", response.readEntity(String.class));
     }
     
     @Test
     public void testCreateDisc() {
-        
+        when(serviceMock.addDisc(any(Disc.class))).thenReturn(MediaServiceResult.OK);
+        Entity<Disc> entity = Entity.entity(discs[0], MediaType.APPLICATION_JSON);
+        Response response = target("media/discs").request().post(entity);
+        assertEquals(200, response.getStatus());
+        assertEquals("{\"code\":200,\"detail\":\"successful\"}", response.readEntity(String.class));
     }
     
     @Test
     public void testGetDisc() {
-        
+        when(serviceMock.getDisc("9781402894626")).thenReturn(discs[0]);
+        Response response = target("media/discs/9781402894626").request().get();
+        assertEquals(200, response.getStatus());
+        assertEquals("{\"title\":\"TestTitel\",\"barcode\":\"9781402894626\",\"director\":\"TestDirector\",\"fsk\":0}", response.readEntity(String.class));
     }
     
     @Test
     public void testGetDiscs() {
-        
+        when(serviceMock.getDiscs()).thenReturn(discs);
+        Response response = target("media/discs").request().get();
+        assertEquals(200, response.getStatus());
+        assertEquals("[{\"title\":\"TestTitel\",\"barcode\":\"9781402894626\",\"director\":\"TestDirector\",\"fsk\":0},{\"title\":\"TestTitel2\",\"barcode\":\"9783161484100\",\"director\":\"TestDirector\",\"fsk\":0}]", response.readEntity(String.class));
     }
     
     @Test
     public void testUpdateDisc() {
-        
+        when(serviceMock.updateDisc(eq("9781402894626"), any(Disc.class))).thenReturn(MediaServiceResult.OK);
+        Entity<Disc> entity = Entity.entity(discs[0], MediaType.APPLICATION_JSON);
+        Response response = target("media/discs/9781402894626").request().put(entity);
+        assertEquals(200, response.getStatus());
+        assertEquals("{\"code\":200,\"detail\":\"successful\"}", response.readEntity(String.class));
     }
     
 }
