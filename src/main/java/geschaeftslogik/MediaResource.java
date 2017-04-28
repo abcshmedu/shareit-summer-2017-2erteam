@@ -12,8 +12,6 @@ import javax.ws.rs.core.Response;
 
 import org.json.JSONObject;
 
-//import org.json.JSONObject;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -34,6 +32,10 @@ public class MediaResource {
      */
     public MediaResource() {
         mediaService = new MediaServiceImpl();
+    }
+    
+    public MediaResource(MediaService service) {
+        mediaService = service;
     }
     
     /**
