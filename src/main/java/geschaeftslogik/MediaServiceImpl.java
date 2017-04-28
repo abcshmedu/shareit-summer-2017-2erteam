@@ -23,19 +23,19 @@ public class MediaServiceImpl implements MediaService {
     public MediaServiceImpl() {
         if (books == null) {
             books = new ArrayList<Book>();
-            books.add(new Book("a", "a", "1"));
-            books.add(new Book("b", "b", "2"));
+            books.add(new Book("a", "a", "978-1-4028-9462-6"));
+            books.add(new Book("b", "b", "978-3-16-148410-0"));
         }
         if (discs == null) {
             discs = new ArrayList<Disc>();
-            discs.add(new Disc("TestTitel", "1234", 0, "TestDirector"));
-            discs.add(new Disc("TestTitel2", "5678", 0, "TestDirector"));
+            discs.add(new Disc("TestTitel", "9781402894626", 0, "TestDirector"));
+            discs.add(new Disc("TestTitel2", "9783161484100", 0, "TestDirector"));
         }
     }
     
     @Override
     public MediaServiceResult addBook(Book b) {
-        if (b.getIsbn().length() > 13 || "".equals(b.getAuthor()) || "".equals(b.getTitle())) {
+        if (!testCode(b.getIsbn()) || "".equals(b.getAuthor()) || "".equals(b.getTitle())) {
             return MediaServiceResult.BAD_REQUEST;
         }  
         else {
@@ -53,7 +53,7 @@ public class MediaServiceImpl implements MediaService {
     
     @Override
     public MediaServiceResult addDisc(Disc d) {
-        if (d.getBarcode().length() > 14 || "".equals(d.getDirector()) || "".equals(d.getTitle())) {
+        if (!testCode(d.getBarcode()) || "".equals(d.getDirector()) || "".equals(d.getTitle())) {
             return MediaServiceResult.BAD_REQUEST;
         }
         else {
@@ -168,20 +168,34 @@ public class MediaServiceImpl implements MediaService {
         }
         return null;
     }
-    public boolean testCode(String toTest){
-        if(toTest == null || toTest.length()!=13)
+    
+    /**
+     * Checks if there is a valid isbn number.
+     * @param toTest isbn or barcode to test
+     * @return true if the code is valid
+     */
+    public boolean testCode(String toTest) {
+        toTest = toTest.replace("-", "");
+        if (toTest == null || toTest.length()!= 13) {
             return false;
+        }
         ArrayList<Integer> ints = convString(toTest);
-        int result = (ints.get(0) + ints.get(2) + ints.get(4) + ints.get(6) + ints.get(8) + ints.get(10) + ints.get(12) + 3 * ( ints.get(1) + ints.get(3) + ints.get(5) + ints.get(7) + ints.get(9) + ints.get(11))) % 10;
-        if(result == 0){
+        int result = (ints.get(0) + ints.get(2) + ints.get(4) + ints.get(6) + ints.get(8) + ints.get(10) + ints.get(12) + 3 * (ints.get(1) + ints.get(3) + ints.get(5) + ints.get(7) + ints.get(9) + ints.get(11))) % 10;
+        if (result == 0) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
-    public ArrayList<Integer> convString(String s){
+    
+    /**
+     * Converts String.
+     * @param s string
+     * @return list
+     */
+    public ArrayList<Integer> convString(String s) {
         ArrayList<Integer> help = new ArrayList<>();
-        for(char c: s.toCharArray()){
+        for (char c: s.toCharArray()) {
             help.add(Character.getNumericValue(c));
         }
         return help;
