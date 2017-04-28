@@ -1,4 +1,5 @@
 package geschaeftslogik;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -8,7 +9,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.json.JSONObject;
 
@@ -103,8 +103,12 @@ public class MediaResource {
         // 2. call the Service1 (to update that Object)
         // 3. serialize Services answer
         // 4. forward serialized answer
-        return Response.status(Status.OK)
-                .entity(objToJson(mediaService.updateBook(isbn, b)))
+        MediaServiceResult res = mediaService.updateBook(isbn, b);
+        JSONObject jo = new JSONObject();
+        jo.put("detail", res.getStatus());
+        jo.put("code", res.getCode());
+        return Response.status(res.getCode())
+                .entity(jo.toString())
                 .build();
     }
     
@@ -119,8 +123,11 @@ public class MediaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createDisc(Disc d) {
         MediaServiceResult res = mediaService.addDisc(d);
+        JSONObject jo = new JSONObject();
+        jo.put("detail", res.getStatus());
+        jo.put("code", res.getCode());
         return Response.status(res.getCode())
-                .entity(objToJson(mediaService.addDisc(d)))
+                .entity(jo.toString())
                 .build();
     }
     
@@ -162,8 +169,12 @@ public class MediaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateDisc(@PathParam("barcode") String barcode, Disc d) {
-        return Response.status(Status.OK)
-                .entity(objToJson(mediaService.updateDisc(barcode, d)))
+        MediaServiceResult res = mediaService.updateDisc(barcode, d);
+        JSONObject jo = new JSONObject();
+        jo.put("detail", res.getStatus());
+        jo.put("code", res.getCode());
+        return Response.status(res.getCode())
+                .entity(jo.toString())
                 .build();
     }
     
