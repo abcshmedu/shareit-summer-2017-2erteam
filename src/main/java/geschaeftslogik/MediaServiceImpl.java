@@ -101,8 +101,10 @@ public class MediaServiceImpl implements MediaService {
         if (!(isbn.equals(b.getIsbn())) || ("".equals(b.getAuthor()) && "".equals(b.getTitle()))) {
             return MediaServiceResult.BAD_REQUEST;
         }
-        toUpdate.setAuthor(b.getAuthor());
-        toUpdate.setTitle(b.getTitle());
+        if(!b.getAuthor().isEmpty())
+            toUpdate.setAuthor(b.getAuthor());
+        if(!b.getTitle().isEmpty())
+            toUpdate.setTitle(b.getTitle());
         return MediaServiceResult.OK;
     }
     
@@ -140,12 +142,15 @@ public class MediaServiceImpl implements MediaService {
         if (!searchDisc(barcode)) {
             return MediaServiceResult.NOT_FOUND;
         }
-        if (!(barcode.equals(d.getBarcode())) || ("".equals(d.getDirector()) && "".equals(d.getTitle()))) {
+        if (!(barcode.equals(d.getBarcode())) || ("".equals(d.getDirector()) && "".equals(d.getTitle()) && (d.getFsk()==-1))) {
             return MediaServiceResult.BAD_REQUEST;
         }
-        toUpdate.setDirector(d.getDirector());
-        toUpdate.setTitle(d.getTitle());
-        toUpdate.setFsk(d.getFsk());
+        if(!d.getDirector().isEmpty())
+            toUpdate.setDirector(d.getDirector());
+        if(!d.getTitle().isEmpty())
+            toUpdate.setTitle(d.getTitle());
+        if(d.getFsk()!=-1)
+            toUpdate.setFsk(d.getFsk());
         return MediaServiceResult.OK;
     }
     

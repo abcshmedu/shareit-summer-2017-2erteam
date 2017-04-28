@@ -102,11 +102,17 @@ var listDiscs = function() {
 * update a Disc
 */
 var updateDisc = function() {
+	var helper;
+	if( $("input[name=fsk]").val().length === 0 ){
+		helper = -1;
+	} else{
+		helper = $("input[name=fsk]").val();
+	}
 	var json = JSON.stringify({
 			title: $("input[name=title]").val(),
 			director: $("input[name=director]").val(),
 			barcode: $("input[name=barcode]").val(),
-			fsk: $("input[name=fsk]").val()
+			fsk: helper
 	});
 	var errorText = $("#errormessage");
     $.ajax({
