@@ -168,4 +168,22 @@ public class MediaServiceImpl implements MediaService {
         }
         return null;
     }
+    public boolean testCode(String toTest){
+        if(toTest == null || toTest.length()!=13)
+            return false;
+        ArrayList<Integer> ints = convString(toTest);
+        int result = (ints.get(0) + ints.get(2) + ints.get(4) + ints.get(6) + ints.get(8) + ints.get(10) + ints.get(12) + 3 * ( ints.get(1) + ints.get(3) + ints.get(5) + ints.get(7) + ints.get(9) + ints.get(11))) % 10;
+        if(result == 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public ArrayList<Integer> convString(String s){
+        ArrayList<Integer> help = new ArrayList<>();
+        for(char c: s.toCharArray()){
+            help.add(Character.getNumericValue(c));
+        }
+        return help;
+    }
 }
