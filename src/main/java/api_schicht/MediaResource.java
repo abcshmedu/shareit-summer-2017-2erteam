@@ -1,4 +1,4 @@
-package geschaeftslogik;
+package api_schicht;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -16,6 +16,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import datenzugriffsschicht.*;
+import geschaeftslogik.MediaService;
+import geschaeftslogik.MediaServiceImpl;
+import geschaeftslogik.MediaServiceResult;
 
 /**
  * The class MediaResource hands off JSON Objects to the service.

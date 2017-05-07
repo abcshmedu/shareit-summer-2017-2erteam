@@ -1,4 +1,4 @@
-package geschaeftslogikTest;
+package api_schichtTest;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
@@ -11,6 +11,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import api_schicht.MediaResource;
+
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
@@ -18,7 +20,6 @@ import static org.mockito.ArgumentMatchers.eq;
 
 import datenzugriffsschicht.Book;
 import datenzugriffsschicht.Disc;
-import geschaeftslogik.MediaResource;
 import geschaeftslogik.MediaService;
 import geschaeftslogik.MediaServiceResult;
 
