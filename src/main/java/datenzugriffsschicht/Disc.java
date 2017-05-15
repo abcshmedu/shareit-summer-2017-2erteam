@@ -115,4 +115,12 @@ public class Disc extends Medium {
         }
         return true;
     }
+
+    /**
+     * @param barcode the barcode to set
+     */
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
+    }
+    
 }
