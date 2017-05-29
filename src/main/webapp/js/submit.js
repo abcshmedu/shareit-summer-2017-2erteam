@@ -230,3 +230,26 @@ var changeContent = function(content) {
 		$("#content").html(data);
 	});// no error handling
 }
+var login = function() {
+	var json = JSON.stringify({
+		usr: $("input[name=usr]").val(),
+		pwd: $("input[name=pwd]").val()
+	});
+	var errorText = $("#errormessage");
+	$.ajax({
+	    url: 'https://pure-scrubland-78710.herokuapp.com/shareit/users/authenticate/'+$("input[name=usr]").val()+ '/' + $("input[name=pwd]").val(),
+	    type:'GET',
+	    contentType: 'application/json; charset=UTF-8'
+	    })
+	    .done(() => {
+			var template = "<table class='u-full-width'><tbody>{{#data}}<tr><td>{{usr}}</td><td>{{pwd}}</td></tr>{{/data}}</tbody></table>";
+			Mustache.parse(template);
+			var output = Mustache.render(template, {data: data});
+			$("#content").html(output);
+	    })
+	    .fail((error) => {
+	    	errorText.addClass("visible");
+	    	errorText.text(error.responseJSON.detail);
+	    	errorText.removeClass("hidden");
+	    });
+}
