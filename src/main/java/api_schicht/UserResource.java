@@ -48,12 +48,12 @@ public class UserResource {
      * @return service response
      */
     @GET
-    @Path("/authenticate/{user}/{pwd}")
+    @Path("/authenticate/{user}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createToken(@PathParam("user")String user, @PathParam("pwd")String pwd) {
+    public Response createToken(@PathParam("user")String user) {
         return Response.status(Response.Status.OK)
-        .entity(objToJson(userService.createToken(user, pwd)))
+        .entity(objToJson(userService.createToken(user, "admin")))
         .build();
     }
     
