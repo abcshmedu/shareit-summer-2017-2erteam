@@ -46,4 +46,9 @@ public interface UserService {
      * @return the user who owns the token else null
      */
     TokenResult validateToken(String token);
+    
+    /**
+     * Retuns the current token belonging to a user
+     */
+    Token getToken(String user, String password);
 }

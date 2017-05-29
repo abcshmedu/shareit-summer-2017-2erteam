@@ -4,7 +4,7 @@
  * Ugly java script code for simple tests of shareit's REST interface.
  *  @author Axel Böttcher <axel.boettcher@hm.edu>
  */
-
+var currentToken;
 /**
  * This function is used for transfer of new book info.
  */
@@ -16,7 +16,7 @@ var submitNewBook = function() {
 	});
 	var errorText = $("#errormessage");
     $.ajax({
-        url: '/shareit/media/books/',
+        url: '/shareit/media/books/' + currentToken,
         type:'POST',
         contentType: 'application/json; charset=UTF-8',
         data: json
@@ -47,7 +47,7 @@ var newDisc = function() {
 	});
 	var errorText = $("#errormessage");
     $.ajax({
-        url: '/shareit/media/discs/',
+        url: '/shareit/media/discs/'+ currentToken,
         type:'POST',
         contentType: 'application/json; charset=UTF-8',
         data: json
@@ -73,7 +73,7 @@ var newDisc = function() {
  */
 var listBooks = function() {
 	$.ajax({
-        url: '/shareit/media/books',
+        url: '/shareit/media/books' + "/" + currentToken,
         type:'GET'
 	})
 	.done((data) => {
@@ -88,7 +88,7 @@ var listBooks = function() {
  */
 var listDiscs = function() {
 	$.ajax({
-        url: '/shareit/media/discs',
+        url: '/shareit/media/discs' + "/" + currentToken,
         type:'GET'
 	})
 	.done((data) => {
@@ -116,7 +116,7 @@ var updateDisc = function() {
 	});
 	var errorText = $("#errormessage");
     $.ajax({
-        url: '/shareit/media/discs/'+$("input[name=barcode]").val(),
+        url: '/shareit/media/discs/'+$("input[name=barcode]").val() + "/" + currentToken,
         type:'PUT',
         contentType: 'application/json; charset=UTF-8',
         data: json
@@ -147,7 +147,7 @@ var updateBook = function() {
 	});
 	var errorText = $("#errormessage");
     $.ajax({
-        url: '/shareit/media/books/'+$("input[name=isbn]").val(),
+        url: '/shareit/media/books/'+$("input[name=isbn]").val() + "/" + currentToken,
         type:'PUT',
         contentType: 'application/json; charset=UTF-8',
         data: json
@@ -175,7 +175,7 @@ var getBook = function() {
 	});
 	var errorText = $("#errormessage");
     $.ajax({
-        url: '/shareit/media/books/'+$("input[name=isbn]").val(),
+        url: '/shareit/media/books/'+$("input[name=isbn]").val() + "/" + currentToken,
         type:'GET',
         contentType: 'application/json; charset=UTF-8',
         data: json
@@ -201,7 +201,7 @@ var getDisc = function() {
 	});
 	var errorText = $("#errormessage");
     $.ajax({
-        url: '/shareit/media/books/'+$("input[name=barcode]").val(),
+        url: '/shareit/media/books/'+$("input[name=barcode]").val() + "/" + currentToken,
         type:'GET',
         contentType: 'application/json; charset=UTF-8',
         data: json
@@ -232,21 +232,22 @@ var changeContent = function(content) {
 }
 var login = function() {
 	var json = JSON.stringify({
-		user: $("input[name=usr]").val()
+		user: $("input[name=usr]").val(),
+		pwd: $("input[name=pwd]").val()
 	});
 	var errorText = $("#errormessage");
 	$.ajax({
-	    url: 'shareit/users/authenticate/' +$("input[name=usr]").val() ,
+	    url: 'shareit/users/authenticate/' +$("input[name=usr]").val() + '/' +$("input[name=pwd]").val() ,
 	    type:'GET',
 	    contentType: 'application/json; charset=UTF-8',
         data: json
 	    })
-	    .done(() => {
-			var template = "<table class='u-full-width'><tbody>{{#data}}<tr><td>{{usr}}</td><td>{{pwd}}</td></tr>{{/data}}</tbody></table>";
-			alert('test');
-			Mustache.parse(template);
-			var output = Mustache.render(template, {data: data});
-			$("#content").html(output);
+	    .done((success) => {
+	    	currentToken=success.token;
+			//var template = "<table class='u-full-width'><tbody>{{#data}}<tr><td>{{usr}}</td><td>{{pwd}}</td></tr>{{/data}}</tbody></table>";
+			//Mustache.parse(template);
+			//var output = Mustache.render(template, {data: data});
+			//$("#content").html(output);
 	    })
 	    .fail((error) => {
 	    	errorText.addClass("visible");

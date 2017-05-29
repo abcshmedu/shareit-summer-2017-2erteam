@@ -16,21 +16,19 @@ import datenzugriffsschicht.Token;
  */
 public class UserServiceImpl implements UserService {
     private ArrayList<User> users;
-    private HashMap<Token, User> tokenUserMap;
-    private int nextToken;
+    private static HashMap<Token, User> tokenUserMap = new HashMap<>();;
+    private static int nextToken = 0;
     
     /**
      * Constructs an user service with some default users.
      */
     public UserServiceImpl() {
-        tokenUserMap = new HashMap<>();
         users = new ArrayList<>();
         users.add(new User("admin", "admin", 1, true, "a@b.com", UserGroup.ADMIN));
         users.add(new User("sepp", "sepp", 2, true, "a@b.com", UserGroup.NORMAL));
         //CHECKSTYLE:OFF
         users.add(new User("hans", "hans", 3, true, "a@b.com", UserGroup.ADMIN));
         //CHECKSTYLE:ON
-        nextToken = 0;
     }
 
 
@@ -83,6 +81,7 @@ public class UserServiceImpl implements UserService {
             Token help = new Token(nextToken);
             nextToken++;
             tokenUserMap.put(help, u);
+            System.out.println(help.getToken());
             return TokenResult.OK;
         }
     }
@@ -99,6 +98,16 @@ public class UserServiceImpl implements UserService {
             }
         }
         return TokenResult.INVALID;       
+    }
+    public Token getToken(String user, String pwd){
+        User u = authenticateUser(user,pwd);
+        for (Entry<Token, User> e: tokenUserMap.entrySet()) {
+            if (e.getValue().equals(u)) {
+                //todo: Prüfung auf gültigkeit (nicht abgelaufen)
+                return e.getKey();
+            }
+        }
+        return null;
     }
 
 }

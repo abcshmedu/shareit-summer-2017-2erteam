@@ -37,6 +37,7 @@ public class MediaServiceImpl implements MediaService {
     
     @Override
     public MediaServiceResult addBook(Book b) {
+        b.setIsbn(b.getIsbn().replaceAll("-", ""));
         if (!testCode(b.getIsbn()) || "".equals(b.getAuthor()) || "".equals(b.getTitle())) {
             return MediaServiceResult.BAD_REQUEST;
         }  
@@ -46,7 +47,7 @@ public class MediaServiceImpl implements MediaService {
                     return MediaServiceResult.CONFLICT;
                 }
             }
-            b.setIsbn(b.getIsbn().replaceAll("-", ""));
+            
             books.add(b);
             System.out.println(b.toString());
             System.out.println("new books size is: " + books.size());
@@ -56,6 +57,7 @@ public class MediaServiceImpl implements MediaService {
     
     @Override
     public MediaServiceResult addDisc(Disc d) {
+        d.setBarcode(d.getBarcode().replaceAll("-",""));
         if (!testCode(d.getBarcode()) || "".equals(d.getDirector()) || "".equals(d.getTitle())) {
             return MediaServiceResult.BAD_REQUEST;
         }
@@ -65,7 +67,6 @@ public class MediaServiceImpl implements MediaService {
                     return MediaServiceResult.CONFLICT;
                 }
             }
-            d.setBarcode(d.getBarcode().replaceAll("-",""));
             discs.add(d);
             System.out.println(d.toString());
             System.out.println("new disc size is: " + discs.size());

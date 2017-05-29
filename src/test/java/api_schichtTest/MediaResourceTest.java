@@ -118,5 +118,7 @@ public class MediaResourceTest extends JerseyTest {
         assertEquals(200, response.getStatus());
         assertEquals("{\"code\":200,\"detail\":\"successful\"}", response.readEntity(String.class));
     }
+    @Test
+    
     
 }

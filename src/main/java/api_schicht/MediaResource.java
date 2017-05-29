@@ -1,5 +1,15 @@
 package api_schicht;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -7,8 +17,13 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Invocation.Builder;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.json.JSONObject;
 
@@ -51,20 +66,30 @@ public class MediaResource {
      * @return response
      */
     @POST
-    @Path("/books")
+    @Path("/books/{token}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createBook(Book b) {
-        System.out.println("got called");
-        MediaServiceResult res = mediaService.addBook(b);
-        // wird wohl automatisch von JSON zu nem Objekt umgewandelt...
+    public Response createBook(Book b, @PathParam("token")String token) {
+        // validate Token an eigenem O-Auth
+        try{
+            if(validateToken(token)){
+                MediaServiceResult res = mediaService.addBook(b);
+                // wird wohl automatisch von JSON zu nem Objekt umgewandelt...
+                JSONObject jo = new JSONObject();
+                jo.put("detail", res.getStatus());
+                jo.put("code", res.getCode());
+                return Response
+                        .status(res.getCode())
+                        .entity(jo.toString())
+                        .build();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         JSONObject jo = new JSONObject();
-        jo.put("detail", res.getStatus());
-        jo.put("code", res.getCode());
-        return Response
-                .status(res.getCode())
-                .entity(jo.toString())
-                .build();
+        jo.put("detail","Invalid Token");
+        jo.put("code", 200);
+        return Response.status(Status.UNAUTHORIZED).entity(jo.toString()).build();
     }
     
     /**
@@ -72,12 +97,23 @@ public class MediaResource {
      * @return response
      */
     @GET
-    @Path("/books")
+    @Path("/books/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getBooks() {
-        return Response.status(Response.Status.OK)
-                .entity(objToJson(mediaService.getBooks()))
-                .build();
+    public Response getBooks(@PathParam("token")String token) {
+        try{
+            if(validateToken(token)){
+                return Response.status(Response.Status.OK)
+                        .entity(objToJson(mediaService.getBooks()))
+                        .build();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        JSONObject jo = new JSONObject();
+        jo.put("detail","Invalid Token");
+        jo.put("code", 200);
+        return Response.status(Status.UNAUTHORIZED).entity(jo.toString()).build();
+        
     }
     
     /**
@@ -86,15 +122,27 @@ public class MediaResource {
      * @return response
      */
     @GET
-    @Path("/books/{isbn}")
+    @Path("/books/{isbn}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getBook(@PathParam("isbn")String isbn) {
+    public Response getBook(@PathParam("isbn")String isbn, @PathParam("token")String token) {
         // 1. ask Service for a specific Book (isbn) after de-serializing
         // 2. serialize the Book
         // 3. forward the serialized answer
-        return Response.status(Response.Status.OK)
-                .entity(objToJson(mediaService.getBook(isbn)))
-                .build();
+        try{
+            if(validateToken(token)){
+                return Response.status(Response.Status.OK)
+                        .entity(objToJson(mediaService.getBook(isbn)))
+                        .build();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        JSONObject jo = new JSONObject();
+        jo.put("detail","Invalid Token");
+        jo.put("code", 200);
+        return Response.status(Status.UNAUTHORIZED).entity(jo.toString()).build();
+        
+        
     }
     
     /**
@@ -104,21 +152,31 @@ public class MediaResource {
      * @return reponse
      */
     @PUT
-    @Path("/books/{isbn}")
+    @Path("/books/{isbn}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateBook(@PathParam("isbn") String isbn, Book b) {
+    public Response updateBook(@PathParam("isbn") String isbn, Book b, @PathParam("token")String token) {
         // 1. de-serialize the received JSON to make an Object
         // 2. call the Service1 (to update that Object)
         // 3. serialize Services answer
         // 4. forward serialized answer
-        MediaServiceResult res = mediaService.updateBook(isbn, b);
+        try{
+            if(validateToken(token)){
+                MediaServiceResult res = mediaService.updateBook(isbn, b);
+                JSONObject jo = new JSONObject();
+                jo.put("detail", res.getStatus());
+                jo.put("code", res.getCode());
+                return Response.status(res.getCode())
+                        .entity(jo.toString())
+                        .build();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         JSONObject jo = new JSONObject();
-        jo.put("detail", res.getStatus());
-        jo.put("code", res.getCode());
-        return Response.status(res.getCode())
-                .entity(jo.toString())
-                .build();
+        jo.put("detail","Invalid Token");
+        jo.put("code", 200);
+        return Response.status(Status.UNAUTHORIZED).entity(jo.toString()).build();
     }
     
     /**
@@ -127,17 +185,27 @@ public class MediaResource {
      * @return response
      */
     @POST
-    @Path("/discs")
+    @Path("/discs/{token}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createDisc(Disc d) {
-        MediaServiceResult res = mediaService.addDisc(d);
+    public Response createDisc(Disc d, @PathParam("token")String token) {
+        try{
+            if(validateToken(token)){
+                MediaServiceResult res = mediaService.addDisc(d);
+                JSONObject jo = new JSONObject();
+                jo.put("detail", res.getStatus());
+                jo.put("code", res.getCode());
+                return Response.status(res.getCode())
+                        .entity(jo.toString())
+                        .build();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         JSONObject jo = new JSONObject();
-        jo.put("detail", res.getStatus());
-        jo.put("code", res.getCode());
-        return Response.status(res.getCode())
-                .entity(jo.toString())
-                .build();
+        jo.put("detail","Invalid Token");
+        jo.put("code", 200);
+        return Response.status(Status.UNAUTHORIZED).entity(jo.toString()).build();
     }
     
     /**
@@ -145,12 +213,22 @@ public class MediaResource {
      * @return response
      */
     @GET
-    @Path("/discs")
+    @Path("/discs/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getDiscs() {
-        return Response.status(Response.Status.OK)
-                .entity(objToJson(mediaService.getDiscs()))
-                .build();
+    public Response getDiscs(@PathParam("token")String token) {
+        try{
+            if(validateToken(token)){
+                return Response.status(Response.Status.OK)
+                        .entity(objToJson(mediaService.getDiscs()))
+                        .build();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        JSONObject jo = new JSONObject();
+        jo.put("detail","Invalid Token");
+        jo.put("code", 200);
+        return Response.status(Status.UNAUTHORIZED).entity(jo.toString()).build(); 
     }
     
     /**
@@ -159,12 +237,23 @@ public class MediaResource {
      * @return response
      */
     @GET
-    @Path("/discs/{barcode}")
+    @Path("/discs/{barcode}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getDisc(@PathParam("barcode")String barcode) {
-        return Response.status(Response.Status.OK)
-                .entity(objToJson(mediaService.getDisc(barcode)))
-                .build();
+    public Response getDisc(@PathParam("barcode")String barcode, @PathParam("token")String token) {
+        
+        try{
+            if(validateToken(token)){
+                return Response.status(Response.Status.OK)
+                        .entity(objToJson(mediaService.getDisc(barcode)))
+                        .build();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        JSONObject jo = new JSONObject();
+        jo.put("detail","Invalid Token");
+        jo.put("code", 200);
+        return Response.status(Status.UNAUTHORIZED).entity(jo.toString()).build();
     }
     
     /**
@@ -174,17 +263,28 @@ public class MediaResource {
      * @return response
      */
     @PUT
-    @Path("/discs/{barcode}")
+    @Path("/discs/{barcode}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateDisc(@PathParam("barcode") String barcode, Disc d) {
-        MediaServiceResult res = mediaService.updateDisc(barcode, d);
+    public Response updateDisc(@PathParam("barcode") String barcode, Disc d, @PathParam("token")String token) {
+        try{
+            if(validateToken(token)){
+                MediaServiceResult res = mediaService.updateDisc(barcode, d);
+                JSONObject jo = new JSONObject();
+                jo.put("detail", res.getStatus());
+                jo.put("code", res.getCode());
+                return Response.status(res.getCode())
+                        .entity(jo.toString())
+                        .build();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         JSONObject jo = new JSONObject();
-        jo.put("detail", res.getStatus());
-        jo.put("code", res.getCode());
-        return Response.status(res.getCode())
-                .entity(jo.toString())
-                .build();
+        jo.put("detail","Invalid Token");
+        jo.put("code", 200);
+        return Response.status(Status.UNAUTHORIZED).entity(jo.toString()).build();
+        
     }
     
     /**
@@ -203,4 +303,17 @@ public class MediaResource {
         }
         return result;
     }
+    private boolean validateToken(String token){
+        Client client = ClientBuilder.newClient();
+        WebTarget resource = client.target("http://localhost:8080/shareit/users/"+token);
+        Builder request = resource.request();
+        request.accept(MediaType.APPLICATION_JSON);
+        Response response = request.get();
+        if(response.getStatus()==200){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
 }

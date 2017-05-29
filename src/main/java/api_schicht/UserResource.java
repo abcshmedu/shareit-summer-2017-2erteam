@@ -9,10 +9,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.json.JSONObject;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import datenzugriffsschicht.Token;
 import datenzugriffsschicht.User;
+import geschaeftslogik.TokenResult;
 import geschaeftslogik.UserService;
 import geschaeftslogik.UserServiceImpl;
 
@@ -48,43 +52,25 @@ public class UserResource {
      * @return service response
      */
     @GET
-    @Path("/authenticate/{user}")
+    @Path("/authenticate/{user}/{pwd}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createToken(@PathParam("user")String user) {
-        System.out.println("------I RECHED THE METHOD------");
-        return Response.status(Response.Status.OK)
-        .entity(objToJson(userService.createToken(user, "admin")))
-        .build();
-    }
-    
-    /**
-     * Lists all users.
-     * @return service response
-     */
-    @GET
-    @Path("/")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response listUsers() {
-        return Response.status(Response.Status.OK)
-        .entity(objToJson(userService.getUsers()))
-        .build();
-    }
-    
-    /**
-     * returns one specific user.
-     * @param id from the user
-     * @return service response
-     */
-    @GET
-    @Path("/{id}") // get
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getUser(@PathParam("id") String id) {
-        return Response.status(Response.Status.OK)
-                .entity(objToJson(userService.getUser(Integer.parseInt(id))))
+    public Response createToken(@PathParam("user")String user,@PathParam("pwd")String pwd) {
+        TokenResult res = userService.createToken(user, pwd);
+        Token token = new Token();
+        if(res.getCode() == 200){
+            token = userService.getToken(user, pwd);
+        }
+        JSONObject jo = new JSONObject();
+        jo.put("detail", res.getStatus());
+        jo.put("code", res.getCode());
+        jo.put("token", token.getToken());
+        return Response
+                .status(res.getCode())
+                .entity(jo.toString())
                 .build();
     }
-    
+   
     
     /**
      * checks if a token is validated.
@@ -95,8 +81,13 @@ public class UserResource {
     @Path("/{token}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response validateToken(@PathParam("token") String token) {
-        return Response.status(Response.Status.OK)
-                .entity(objToJson(userService.validateToken(token)))
+        TokenResult res = userService.validateToken(token);
+        JSONObject jo = new JSONObject();
+        jo.put("detail", res.getStatus());
+        jo.put("code", res.getCode());
+        return Response
+                .status(res.getCode())
+                .entity(jo.toString())
                 .build();
     }
     /**
