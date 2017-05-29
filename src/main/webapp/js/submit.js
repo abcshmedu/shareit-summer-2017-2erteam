@@ -232,8 +232,7 @@ var changeContent = function(content) {
 }
 var login = function() {
 	var json = JSON.stringify({
-		usr: $("input[name=usr]").val(),
-		pwd: $("input[name=pwd]").val()
+		user: $("input[name=usr]").val()
 	});
 	var errorText = $("#errormessage");
 	$.ajax({
@@ -244,6 +243,7 @@ var login = function() {
 	    })
 	    .done(() => {
 			var template = "<table class='u-full-width'><tbody>{{#data}}<tr><td>{{usr}}</td><td>{{pwd}}</td></tr>{{/data}}</tbody></table>";
+			alert('test');
 			Mustache.parse(template);
 			var output = Mustache.render(template, {data: data});
 			$("#content").html(output);
