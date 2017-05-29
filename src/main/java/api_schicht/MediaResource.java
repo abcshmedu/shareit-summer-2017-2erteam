@@ -1,15 +1,5 @@
 package api_schicht;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import javax.net.ssl.HttpsURLConnection;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -43,6 +33,8 @@ import geschaeftslogik.MediaServiceResult;
 @Path("/media")
 public class MediaResource {
 
+    private static final int OK = 200;
+
     private final MediaService mediaService;
     
     /**
@@ -63,6 +55,7 @@ public class MediaResource {
     /**
      * Creates a new Book in the service.
      * @param b new Book
+     * @param token t
      * @return response
      */
     @POST
@@ -71,8 +64,8 @@ public class MediaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createBook(Book b, @PathParam("token")String token) {
         // validate Token an eigenem O-Auth
-        try{
-            if(validateToken(token)){
+        try {
+            if (validateToken(token)) {
                 MediaServiceResult res = mediaService.addBook(b);
                 // wird wohl automatisch von JSON zu nem Objekt umgewandelt...
                 JSONObject jo = new JSONObject();
@@ -83,41 +76,43 @@ public class MediaResource {
                         .entity(jo.toString())
                         .build();
             }
-        }catch(Exception e){
+        } catch(Exception e) {
             e.printStackTrace();
         }
         JSONObject jo = new JSONObject();
-        jo.put("detail","Invalid Token");
-        jo.put("code", 200);
+        jo.put("detail", "Invalid Token");
+        jo.put("code", OK);
         return Response.status(Status.UNAUTHORIZED).entity(jo.toString()).build();
     }
     
     /**
      * Lists all books.
+     * @param token t
      * @return response
      */
     @GET
     @Path("/books/{token}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getBooks(@PathParam("token")String token) {
-        try{
-            if(validateToken(token)){
+        try {
+            if (validateToken(token)) {
                 return Response.status(Response.Status.OK)
                         .entity(objToJson(mediaService.getBooks()))
                         .build();
             }
-        }catch(Exception e){
+        } catch(Exception e) {
             e.printStackTrace();
         }
         JSONObject jo = new JSONObject();
-        jo.put("detail","Invalid Token");
-        jo.put("code", 200);
+        jo.put("detail", "Invalid Token");
+        jo.put("code", OK);
         return Response.status(Status.UNAUTHORIZED).entity(jo.toString()).build();
         
     }
     
     /**
      * Lists one specific book.
+     * @param token t
      * @param isbn of the book
      * @return response
      */
@@ -128,18 +123,18 @@ public class MediaResource {
         // 1. ask Service for a specific Book (isbn) after de-serializing
         // 2. serialize the Book
         // 3. forward the serialized answer
-        try{
-            if(validateToken(token)){
+        try {
+            if (validateToken(token)) {
                 return Response.status(Response.Status.OK)
                         .entity(objToJson(mediaService.getBook(isbn)))
                         .build();
             }
-        }catch(Exception e){
+        } catch(Exception e) {
             e.printStackTrace();
         }
         JSONObject jo = new JSONObject();
-        jo.put("detail","Invalid Token");
-        jo.put("code", 200);
+        jo.put("detail", "Invalid Token");
+        jo.put("code", OK);
         return Response.status(Status.UNAUTHORIZED).entity(jo.toString()).build();
         
         
@@ -149,6 +144,7 @@ public class MediaResource {
      * Updates the attributes of a book.
      * @param isbn of the book
      * @param b book
+     * @param token t
      * @return reponse
      */
     @PUT
@@ -160,8 +156,8 @@ public class MediaResource {
         // 2. call the Service1 (to update that Object)
         // 3. serialize Services answer
         // 4. forward serialized answer
-        try{
-            if(validateToken(token)){
+        try {
+            if (validateToken(token)) {
                 MediaServiceResult res = mediaService.updateBook(isbn, b);
                 JSONObject jo = new JSONObject();
                 jo.put("detail", res.getStatus());
@@ -170,18 +166,19 @@ public class MediaResource {
                         .entity(jo.toString())
                         .build();
             }
-        }catch(Exception e){
+        } catch(Exception e) {
             e.printStackTrace();
         }
         JSONObject jo = new JSONObject();
-        jo.put("detail","Invalid Token");
-        jo.put("code", 200);
+        jo.put("detail", "Invalid Token");
+        jo.put("code", OK);
         return Response.status(Status.UNAUTHORIZED).entity(jo.toString()).build();
     }
     
     /**
      * Creates a new disc.
      * @param d disc
+     * @param token t
      * @return response
      */
     @POST
@@ -189,8 +186,8 @@ public class MediaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createDisc(Disc d, @PathParam("token")String token) {
-        try{
-            if(validateToken(token)){
+        try {
+            if (validateToken(token)) {
                 MediaServiceResult res = mediaService.addDisc(d);
                 JSONObject jo = new JSONObject();
                 jo.put("detail", res.getStatus());
@@ -199,41 +196,43 @@ public class MediaResource {
                         .entity(jo.toString())
                         .build();
             }
-        }catch(Exception e){
+        } catch(Exception e) {
             e.printStackTrace();
         }
         JSONObject jo = new JSONObject();
-        jo.put("detail","Invalid Token");
-        jo.put("code", 200);
+        jo.put("detail", "Invalid Token");
+        jo.put("code", OK);
         return Response.status(Status.UNAUTHORIZED).entity(jo.toString()).build();
     }
     
     /**
      * Lists all Discs.
+     * @param token t
      * @return response
      */
     @GET
     @Path("/discs/{token}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDiscs(@PathParam("token")String token) {
-        try{
-            if(validateToken(token)){
+        try {
+            if (validateToken(token)) {
                 return Response.status(Response.Status.OK)
                         .entity(objToJson(mediaService.getDiscs()))
                         .build();
             }
-        }catch(Exception e){
+        } catch(Exception e) {
             e.printStackTrace();
         }
         JSONObject jo = new JSONObject();
-        jo.put("detail","Invalid Token");
-        jo.put("code", 200);
+        jo.put("detail", "Invalid Token");
+        jo.put("code", OK);
         return Response.status(Status.UNAUTHORIZED).entity(jo.toString()).build(); 
     }
     
     /**
      * Lists a specific Disc.
      * @param barcode of the disc
+     * @param token t
      * @return response
      */
     @GET
@@ -241,18 +240,18 @@ public class MediaResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDisc(@PathParam("barcode")String barcode, @PathParam("token")String token) {
         
-        try{
-            if(validateToken(token)){
+        try {
+            if (validateToken(token)) {
                 return Response.status(Response.Status.OK)
                         .entity(objToJson(mediaService.getDisc(barcode)))
                         .build();
             }
-        }catch(Exception e){
+        } catch(Exception e) {
             e.printStackTrace();
         }
         JSONObject jo = new JSONObject();
-        jo.put("detail","Invalid Token");
-        jo.put("code", 200);
+        jo.put("detail", "Invalid Token");
+        jo.put("code", OK);
         return Response.status(Status.UNAUTHORIZED).entity(jo.toString()).build();
     }
     
@@ -260,6 +259,7 @@ public class MediaResource {
      * Updates the attributes of a disc.
      * @param barcode of the disc
      * @param d disc
+     * @param token t
      * @return response
      */
     @PUT
@@ -267,8 +267,8 @@ public class MediaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateDisc(@PathParam("barcode") String barcode, Disc d, @PathParam("token")String token) {
-        try{
-            if(validateToken(token)){
+        try {
+            if (validateToken(token)) {
                 MediaServiceResult res = mediaService.updateDisc(barcode, d);
                 JSONObject jo = new JSONObject();
                 jo.put("detail", res.getStatus());
@@ -277,12 +277,12 @@ public class MediaResource {
                         .entity(jo.toString())
                         .build();
             }
-        }catch(Exception e){
+        } catch(Exception e) {
             e.printStackTrace();
         }
         JSONObject jo = new JSONObject();
-        jo.put("detail","Invalid Token");
-        jo.put("code", 200);
+        jo.put("detail", "Invalid Token");
+        jo.put("code", OK);
         return Response.status(Status.UNAUTHORIZED).entity(jo.toString()).build();
         
     }
@@ -303,17 +303,26 @@ public class MediaResource {
         }
         return result;
     }
-    private boolean validateToken(String token){
+    
+    /**
+     * Checks if the token is valid.
+     * @param token to check
+     * @return true if the token is valid
+     */
+    private boolean validateToken(String token) {
         Client client = ClientBuilder.newClient();
-        WebTarget resource = client.target("http://localhost:8080/shareit/users/"+token);
+        WebTarget resource = client.target("http://localhost:8080/shareit/users/" + token);
         Builder request = resource.request();
         request.accept(MediaType.APPLICATION_JSON);
         Response response = request.get();
-        if(response.getStatus()==200){
+        /*
+        if (response.getStatus() == OK) {
             return true;
-        }else{
+        } else {
             return false;
         }
+        */
+        return response.getStatus() == OK;
     }
     
 }

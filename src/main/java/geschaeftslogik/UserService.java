@@ -48,7 +48,10 @@ public interface UserService {
     TokenResult validateToken(String token);
     
     /**
-     * Retuns the current token belonging to a user
+     * Returns the current token belonging to a user.
+     * @param user u
+     * @param password p
+     * @return token
      */
     Token getToken(String user, String password);
 }

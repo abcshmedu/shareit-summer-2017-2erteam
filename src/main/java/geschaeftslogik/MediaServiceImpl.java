@@ -57,7 +57,7 @@ public class MediaServiceImpl implements MediaService {
     
     @Override
     public MediaServiceResult addDisc(Disc d) {
-        d.setBarcode(d.getBarcode().replaceAll("-",""));
+        d.setBarcode(d.getBarcode().replaceAll("-", ""));
         if (!testCode(d.getBarcode()) || "".equals(d.getDirector()) || "".equals(d.getTitle())) {
             return MediaServiceResult.BAD_REQUEST;
         }

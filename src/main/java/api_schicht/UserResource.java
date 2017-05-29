@@ -1,8 +1,6 @@
 package api_schicht;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -15,7 +13,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import datenzugriffsschicht.Token;
-import datenzugriffsschicht.User;
 import geschaeftslogik.TokenResult;
 import geschaeftslogik.UserService;
 import geschaeftslogik.UserServiceImpl;
@@ -27,6 +24,8 @@ import geschaeftslogik.UserServiceImpl;
  */
 @Path("/users")
 public class UserResource {
+
+    private static final int OK = 200;
     
     private final UserService userService;
     
@@ -55,10 +54,10 @@ public class UserResource {
     @Path("/authenticate/{user}/{pwd}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createToken(@PathParam("user")String user,@PathParam("pwd")String pwd) {
+    public Response createToken(@PathParam("user")String user, @PathParam("pwd")String pwd) {
         TokenResult res = userService.createToken(user, pwd);
         Token token = new Token();
-        if(res.getCode() == 200){
+        if (res.getCode() == OK) {
             token = userService.getToken(user, pwd);
         }
         JSONObject jo = new JSONObject();

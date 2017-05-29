@@ -93,14 +93,16 @@ public class UserServiceImpl implements UserService {
             if (e.getKey().getToken().equals(token) && now.before(e.getKey().getDate())) {
                 //todo: Prüfung auf gültigkeit (nicht abgelaufen)
                 return TokenResult.OK;
-            }else if(e.getKey().getToken().equals(token) && !now.before(e.getKey().getDate())){
+            } else if (e.getKey().getToken().equals(token) && !now.before(e.getKey().getDate())) {
                 return TokenResult.CONFLICT;
             }
         }
         return TokenResult.INVALID;       
     }
-    public Token getToken(String user, String pwd){
-        User u = authenticateUser(user,pwd);
+    
+    @Override
+    public Token getToken(String user, String pwd) {
+        User u = authenticateUser(user, pwd);
         for (Entry<Token, User> e: tokenUserMap.entrySet()) {
             if (e.getValue().equals(u)) {
                 //todo: Prüfung auf gültigkeit (nicht abgelaufen)
