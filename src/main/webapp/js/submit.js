@@ -237,7 +237,7 @@ var login = function() {
 	});
 	var errorText = $("#errormessage");
 	$.ajax({
-	    url: 'https://pure-scrubland-78710.herokuapp.com/shareit/users/authenticate',
+	    url: 'shareit/users/authenticate',
 	    type:'POST',
 	    contentType: 'application/json; charset=UTF-8',
         data: json
