@@ -9,20 +9,6 @@ import datenzugriffsschicht.User;
  *
  */
 public interface UserService {
-
-    
-    /**
-     * Returns one specific user.
-     * @param id from the user
-     * @return the user
-     */
-    User getUser(int id);
-    
-    /**
-     * Lists all user.
-     * @return an array with all users
-     */
-    User[] getUsers();
     
     /**
      * Authenticates an user.

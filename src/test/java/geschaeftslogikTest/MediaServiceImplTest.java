@@ -114,10 +114,10 @@ public class MediaServiceImplTest {
     
     @Test
     public void testGetBooks() {
-        Book book1 = new Book("a", "a", "978-1-4028-9462-6");
-        Book book2 = new Book("b", "b", "978-3-16-148410-0");
-        media.addBook(book1);
-        media.addBook(book2);
+        //Book book1 = new Book("a", "a", "978-1-4028-9462-6");
+        //Book book2 = new Book("b", "b", "978-3-16-148410-0");
+        //media.addBook(book1);
+        //media.addBook(book2);
         assertEquals(media.getBooks(), books);
     }
     

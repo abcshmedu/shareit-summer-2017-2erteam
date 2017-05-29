@@ -9,9 +9,6 @@ import javax.ws.rs.core.Response;
 
 import org.json.JSONObject;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import datenzugriffsschicht.Token;
 import geschaeftslogik.TokenResult;
 import geschaeftslogik.UserService;
@@ -88,22 +85,5 @@ public class UserResource {
                 .status(res.getCode())
                 .entity(jo.toString())
                 .build();
-    }
-    /**
-     * Converts a java object to JSON.
-     * @param o object to convert
-     * @return string with the json representation
-     */
-    private String objToJson(Object o) {
-        ObjectMapper mapper = new ObjectMapper();
-        String result = "";
-        try {
-            result = mapper.writeValueAsString(o);
-            System.out.println(result);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }   
-    
+    } 
 }

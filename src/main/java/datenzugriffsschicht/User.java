@@ -1,7 +1,5 @@
 package datenzugriffsschicht;
 
-import java.util.ArrayList;
-
 /**
  * Represents an user in the system.
  * @author Altvatter Robert, Groﬂbeck Thomas
@@ -14,7 +12,6 @@ public class User {
     private boolean active;
     private String email;
     private UserGroup group;
-    private ArrayList<Token> myTokens;
     
     /**
      * Default constructor.
@@ -39,7 +36,6 @@ public class User {
         this.active = active;
         this.email = email;
         this.group = group;
-        this.myTokens = new ArrayList<Token>();
     }
     /**
      * @return the name
@@ -112,6 +108,66 @@ public class User {
      */
     public void setGroup(UserGroup group) {
         this.group = group;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (active ? 1231 : 1237);
+        result = prime * result + ((email == null) ? 0 : email.hashCode());
+        result = prime * result + ((group == null) ? 0 : group.hashCode());
+        result = prime * result + id;
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((password == null) ? 0 : password.hashCode());
+        return result;
+    }
+    
+    //CHECKSTYLE:OFF
+    @Override
+    //CHECKSTYLE:ON
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        User other = (User) obj;
+        if (active != other.active) {
+            return false;
+        }
+        if (email == null) {
+            if (other.email != null) {
+                return false;
+            }
+        } else if (!email.equals(other.email)) {
+            return false;
+        }
+        if (group != other.group) {
+            return false;
+        }
+        if (id != other.id) {
+            return false;
+        }
+        if (name == null) {
+            if (other.name != null) {
+                return false;
+            }
+        } else if (!name.equals(other.name)) {
+            return false;
+        }
+        if (password == null) {
+            if (other.password != null) {
+                return false;
+            }
+        } else if (!password.equals(other.password)) {
+            return false;
+        }
+        return true;
     }
         
 }

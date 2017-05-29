@@ -30,17 +30,6 @@ public class UserServiceImpl implements UserService {
         users.add(new User("hans", "hans", 3, true, "a@b.com", UserGroup.ADMIN));
         //CHECKSTYLE:ON
     }
-
-
-    @Override
-    public User getUser(int id) {
-        for (User u : users) {
-            if (u.getId() == id) {
-                return u;
-            }
-        }
-        return null;
-    }
     
     /**
      * Authenticates an user.
@@ -55,13 +44,6 @@ public class UserServiceImpl implements UserService {
             }
         }
         return null;
-    }
-
-    @Override
-    public User[] getUsers() {
-        User[] array = new User[users.size()];
-        users.toArray(array);
-        return array;
     }
     
     @Override
@@ -91,7 +73,6 @@ public class UserServiceImpl implements UserService {
         Date now = new Date();
         for (Entry<Token, User> e: tokenUserMap.entrySet()) {
             if (e.getKey().getToken().equals(token) && now.before(e.getKey().getDate())) {
-                //todo: Prüfung auf gültigkeit (nicht abgelaufen)
                 return TokenResult.OK;
             } else if (e.getKey().getToken().equals(token) && !now.before(e.getKey().getDate())) {
                 return TokenResult.CONFLICT;
