@@ -52,6 +52,7 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createToken(@PathParam("user")String user) {
+        System.out.println("------I RECHED THE METHOD------");
         return Response.status(Response.Status.OK)
         .entity(objToJson(userService.createToken(user, "admin")))
         .build();
