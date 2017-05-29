@@ -238,7 +238,7 @@ var login = function() {
 	var errorText = $("#errormessage");
 	$.ajax({
 	    url: 'shareit/users/authenticate/' +$("input[name=usr]").val() +'/' +$("input[name=pwd]").val(),
-	    type:'POST',
+	    type:'GET',
 	    contentType: 'application/json; charset=UTF-8',
         data: json
 	    })

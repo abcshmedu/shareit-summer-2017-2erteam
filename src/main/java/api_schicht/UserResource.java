@@ -47,7 +47,7 @@ public class UserResource {
      * @param pwd for mthe user
      * @return service response
      */
-    @POST
+    @GET
     @Path("/authenticate/{user}/{pwd}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
