@@ -239,7 +239,8 @@ var login = function() {
 	$.ajax({
 	    url: 'https://pure-scrubland-78710.herokuapp.com/shareit/users/authenticate/'+$("input[name=usr]").val()+ '/' + $("input[name=pwd]").val(),
 	    type:'GET',
-	    contentType: 'application/json; charset=UTF-8'
+	    contentType: 'application/json; charset=UTF-8',
+        data: json
 	    })
 	    .done(() => {
 			var template = "<table class='u-full-width'><tbody>{{#data}}<tr><td>{{usr}}</td><td>{{pwd}}</td></tr>{{/data}}</tbody></table>";
