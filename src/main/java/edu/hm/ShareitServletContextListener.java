@@ -19,6 +19,7 @@ public class ShareitServletContextListener extends GuiceServletContextListener {
         protected void configureServlets() {
             bind(MediaService.class).to(MediaServiceImpl.class);
             bind(UserService.class).to(UserServiceImpl.class);
+            //bind session factory
         }
     });
 
