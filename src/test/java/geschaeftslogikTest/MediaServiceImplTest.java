@@ -36,7 +36,7 @@ public class MediaServiceImplTest {
 
 //Discs
 //******************************************************************************************
-    /*
+    
     @Test
     public void testAddDiscOk() {
         MediaServiceResult res = media.addDisc(new Disc("TestTitel", "9783826690211", 0, "TestDirector"));
@@ -68,9 +68,9 @@ public class MediaServiceImplTest {
     
     @Test
     public void testGetDisc() {
-        Disc d = new Disc("Test", "Test", 0, "9783551797841");
+        Disc d = new Disc("TestDisc", "9783551359261", 0, "TestA");
         media.addDisc(d);
-        assertEquals(media.getDisc("9783551797841"), d);
+        assertEquals(media.getDisc("9783551359261"), d);
     }
     
     @Test
@@ -98,13 +98,12 @@ public class MediaServiceImplTest {
         assertEquals(res.getCode(), Status.OK.getStatusCode());
     }
     
-    //@Test */
+    //@Test 
     /*public void testAddBookConflict() {
         MediaServiceResult res = media.addBook(new Book("TestTitel", "TestAutor", "978-3-8266-9021-1"));
         MediaServiceResult res2 = media.addBook(new Book("TestTitel", "TestAutor", "978-3-8266-9021-1"));
         assertEquals(res2.getCode(), Status.CONFLICT.getStatusCode());
     }*/
-    /*
     @Test
     public void testAddBookBadRequest() {
         MediaServiceResult res = media.addBook(new Book("", "", "978-3-8266-9021-1"));
@@ -120,19 +119,19 @@ public class MediaServiceImplTest {
         media.addBook(book2);
         assertEquals(media.getBooks().length, start+2);
     }
-    */
+    
     @Test
     public void testGetBook() {
         Book b = new Book("Test", "Test", "9783551714442");
         media.addBook(b);
         assertEquals(media.getBook("9783551714442"), b);
     }
-    /*
+    
     @Test
     public void testUpdateBookOk() {
-        Book b = new Book("Test", "Test", "978-1-4028-9462-6");
+        Book b = new Book("Buch", "AutorB", "9783551797100");
         media.addBook(b);
-        MediaServiceResult res = media.updateBook("978-1-4028-9462-6", new Book("NewTitle", "NewAutor", "978-1-4028-9462-6"));
+        MediaServiceResult res = media.updateBook("9783551797100", new Book("NewTitle", "NewAutor", "9783551797100"));
         assertEquals(res.getCode(), Status.OK.getStatusCode());
     }
     
@@ -144,9 +143,7 @@ public class MediaServiceImplTest {
     
     @Test
     public void testUpdateBookBadRequest() {
-        Book b = new Book("Test", "Test", "978-1-4028-9462-6");
-        media.addBook(b);
-        MediaServiceResult res = media.updateBook("978-1-4028-9462-6", new Book("", "", "978-1-4028-9462-6"));
+        MediaServiceResult res = media.updateBook("9783806875119", new Book("", "", "9783806875119"));
         assertEquals(res.getCode(), Status.BAD_REQUEST.getStatusCode());
-    }*/
+    }
 }

@@ -7,9 +7,8 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import api_schicht.MediaResource;
 
@@ -20,8 +19,10 @@ import static org.mockito.ArgumentMatchers.eq;
 
 import datenzugriffsschicht.Book;
 import datenzugriffsschicht.Disc;
+import edu.hm.TestInjector;
 import geschaeftslogik.MediaService;
 import geschaeftslogik.MediaServiceResult;
+import geschaeftslogik.UserServiceImpl;
 
 
 /**
@@ -32,7 +33,6 @@ import geschaeftslogik.MediaServiceResult;
 public class MediaResourceTest extends JerseyTest {
 //CHECKSTYLE:OFF
 
-    @Mock
     private MediaService serviceMock;
     
     private Book[] books = {
@@ -47,8 +47,15 @@ public class MediaResourceTest extends JerseyTest {
 
     @Override
     protected Application configure() {
-        MockitoAnnotations.initMocks(this);
-        return new ResourceConfig().register(new MediaResource(serviceMock));
+        serviceMock = TestInjector.getInjector().getInstance(MediaService.class);
+        return new ResourceConfig().register(MediaResource.class)
+                .register(TestInjector.class);
+    }
+    
+    @BeforeClass
+    public static void setUp2() {
+        UserServiceImpl us = new UserServiceImpl();
+        us.createToken("admin", "admin");
     }
     
     @Test
@@ -56,6 +63,7 @@ public class MediaResourceTest extends JerseyTest {
         when(serviceMock.addBook(any(Book.class))).thenReturn(MediaServiceResult.OK);
         Entity<Book> entity = Entity.entity(books[0], MediaType.APPLICATION_JSON);
         Response response = target("media/books/0").request().post(entity);
+        System.out.println(response.readEntity(String.class));
         assertEquals(200, response.getStatus());
         assertEquals("{\"code\":200,\"detail\":\"successful\"}", response.readEntity(String.class));
     }

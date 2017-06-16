@@ -1,5 +1,6 @@
 package api_schicht;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -22,7 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import datenzugriffsschicht.*;
 import geschaeftslogik.MediaService;
-import geschaeftslogik.MediaServiceImpl;
 import geschaeftslogik.MediaServiceResult;
 
 /**
@@ -40,14 +40,15 @@ public class MediaResource {
     /**
      * Constructs a media service.
      */
-    public MediaResource() {
-        mediaService = new MediaServiceImpl();
-    }
+//    public MediaResource() {
+//        mediaService = new MediaServiceImpl();
+//    }
     
     /**
      * Constructors a media service.
      * @param service media service
      */
+    @Inject
     public MediaResource(MediaService service) {
         mediaService = service;
     }

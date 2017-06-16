@@ -111,12 +111,13 @@ public class MediaServiceImpl implements MediaService {
      * @return true if the book is in the system.
      */
     public boolean searchBook(String isbn) {
-        for (Book b : pers.getAll(Book.class)) {
-            if (b.getIsbn().equals(isbn)) {
-                return true;
-            }
-        }
-        return false;
+//        for (Book b : pers.getAll(Book.class)) {
+//            if (b.getIsbn().equals(isbn)) {
+//                return true;
+//            }
+//        }
+//        return false;
+        return pers.exist(Book.class, isbn);
     }
     
     /**
