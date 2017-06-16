@@ -1,12 +1,19 @@
 package datenzugriffsschicht;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+
 /**
  * Represents a disc as a medium.
  * @author Altvatter Robert, Groﬂbeck Thomas
  *
  */
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Disc extends Medium {
-
+    @Id
     private String barcode;
     private String director;
     private int fsk;

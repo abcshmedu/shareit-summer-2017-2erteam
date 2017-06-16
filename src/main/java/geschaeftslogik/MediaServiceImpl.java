@@ -6,6 +6,8 @@ import java.util.List;
 import datenzugriffsschicht.Book;
 import datenzugriffsschicht.Disc;
 import datenzugriffsschicht.Medium;
+import persistence.Persistence;
+import persistence.PersistenceImpl;
 
 /**
  * Implementation of the service.
@@ -13,26 +15,15 @@ import datenzugriffsschicht.Medium;
  *
  */
 public class MediaServiceImpl implements MediaService {
-
-    private static List<Book> books;
-    private static List<Disc> discs;
     
     public static final int ISBN_LENGTH = 13;
+    private Persistence pers;
     
     /**
      * Constructs a MediaService instance.
      */
     public MediaServiceImpl() {
-        if (books == null) {
-            books = new ArrayList<Book>();
-            books.add(new Book("a", "a", "978-1-4028-9462-6"));
-            books.add(new Book("b", "b", "978-3-16-148410-0"));
-        }
-        if (discs == null) {
-            discs = new ArrayList<Disc>();
-            discs.add(new Disc("TestTitel", "9781402894626", 0, "TestDirector"));
-            discs.add(new Disc("TestTitel2", "9783161484100", 0, "TestDirector"));
-        }
+        pers = new PersistenceImpl();
     }
     
     @Override
@@ -42,15 +33,14 @@ public class MediaServiceImpl implements MediaService {
             return MediaServiceResult.BAD_REQUEST;
         }  
         else {
-            for (Book book : books) {
+            for (Book book : pers.getAll(Book.class)) {
                 if (book.getIsbn().equals(b.getIsbn())) {
                     return MediaServiceResult.CONFLICT;
                 }
             }
             
-            books.add(b);
+            pers.add(b);
             System.out.println(b.toString());
-            System.out.println("new books size is: " + books.size());
             return MediaServiceResult.OK;
         }
     }
@@ -62,23 +52,22 @@ public class MediaServiceImpl implements MediaService {
             return MediaServiceResult.BAD_REQUEST;
         }
         else {
-            for (Disc disc : discs) {
+            for (Disc disc : pers.getAll(Disc.class)) {
                 if (disc.getBarcode().equals(d.getBarcode())) {
                     return MediaServiceResult.CONFLICT;
                 }
             }
-            discs.add(d);
+            pers.add(d);
             System.out.println(d.toString());
-            System.out.println("new disc size is: " + discs.size());
             return MediaServiceResult.OK;
         }
     }
     
     @Override
     public Medium[] getBooks() {
-        System.out.println("Books size is: " + books.size());
-        Book[] array = new Book[books.size()];
-        books.toArray(array);
+        List<Book> list = pers.getAll(Book.class);
+        Book[] array = new Book[list.size()];
+        list.toArray(array);
         for (Book b : array) {
             System.out.println(b.toString());
         }
@@ -87,9 +76,9 @@ public class MediaServiceImpl implements MediaService {
     
     @Override
     public Medium[] getDiscs() {
-        System.out.println("Discs size is: " + discs.size());
-        Disc[] array = new Disc[discs.size()];
-        discs.toArray(array);
+        List<Disc> list = pers.getAll(Disc.class);
+        Disc[] array = new Disc[list.size()];
+        list.toArray(array);
         for (Disc d : array) {
             System.out.println(d.toString());
         }
@@ -112,6 +101,7 @@ public class MediaServiceImpl implements MediaService {
         if (!b.getTitle().isEmpty()) {
             toUpdate.setTitle(b.getTitle());
         }
+        pers.update(toUpdate);
         return MediaServiceResult.OK;
     }
     
@@ -121,7 +111,7 @@ public class MediaServiceImpl implements MediaService {
      * @return true if the book is in the system.
      */
     public boolean searchBook(String isbn) {
-        for (Book b : books) {
+        for (Book b : pers.getAll(Book.class)) {
             if (b.getIsbn().equals(isbn)) {
                 return true;
             }
@@ -135,7 +125,7 @@ public class MediaServiceImpl implements MediaService {
      * @return true if the disc is in the system.
      */
     public boolean searchDisc(String barcode) {
-        for (Disc d : discs) {
+        for (Disc d : pers.getAll(Disc.class)) {
             if (d.getBarcode().equals(barcode)) {
                 return true;
             }
@@ -161,12 +151,13 @@ public class MediaServiceImpl implements MediaService {
         if (d.getFsk() != -1) {
             toUpdate.setFsk(d.getFsk());
         }
+        pers.update(toUpdate);
         return MediaServiceResult.OK;
     }
     
     @Override
     public Book getBook(String isbn) {
-        for (Book b : books) {
+        for (Book b : pers.getAll(Book.class)) {
             if (b.getIsbn().equals(isbn)) {
                 return b;
             }
@@ -176,7 +167,7 @@ public class MediaServiceImpl implements MediaService {
     
     @Override
     public Disc getDisc(String barcode) {
-        for (Disc d : discs) {
+        for (Disc d : pers.getAll(Disc.class)) {
             if (d.getBarcode().equals(barcode)) {
                 return d;
             }

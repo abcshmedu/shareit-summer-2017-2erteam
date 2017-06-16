@@ -1,13 +1,22 @@
 package datenzugriffsschicht;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+
 /**
  * Represents a book as a Medium.
  * @author Altvatter Robert, Groﬂbeck Thomas
  *
  */
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Book extends Medium {
-    private String author;
+    
+    @Id
     private String isbn;
+    private String author;
     
     /**
      * Constructs a book as a medium.

@@ -1,0 +1,22 @@
+/*C1*/SET SCHEMA SYSTEM_LOBS
+INSERT INTO BLOCKS VALUES(0,2147483647,0)
+COMMIT
+/*C2*/SET SCHEMA PUBLIC
+drop table Book if exists
+drop table Disc if exists
+create table Book (isbn varchar(255) not null, title varchar(255), author varchar(255), primary key (isbn))
+create table Disc (barcode varchar(255) not null, title varchar(255), director varchar(255), fsk integer not null, primary key (barcode))
+/*C3*/SET SCHEMA PUBLIC
+drop table Book if exists
+drop table Disc if exists
+create table Book (isbn varchar(255) not null, title varchar(255), author varchar(255), primary key (isbn))
+create table Disc (barcode varchar(255) not null, title varchar(255), director varchar(255), fsk integer not null, primary key (barcode))
+INSERT INTO BOOK VALUES('978-1556199094','TestTitel','TestAuthor')
+INSERT INTO DISC VALUES('TestAuthor','TestTitel','9783862017782',0)
+COMMIT
+INSERT INTO BOOK VALUES('978-3551714435','Test2','Author2')
+COMMIT
+DELETE FROM BOOK WHERE ISBN='978-1556199094'
+INSERT INTO BOOK VALUES('978-1556199094','TestTitelNeu','TestAuthorNeu')
+COMMIT
+/*C2*/DISCONNECT

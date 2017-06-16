@@ -1,10 +1,13 @@
 package datenzugriffsschicht;
 
+import javax.persistence.MappedSuperclass;
+
 /**
  * Represents a Medium in the service.
  * @author Altvatter Robert, Groﬂbeck Thomas
  *
  */
+@MappedSuperclass
 public abstract class Medium {
 
     private String title;
