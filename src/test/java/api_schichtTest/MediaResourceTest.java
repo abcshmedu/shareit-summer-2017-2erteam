@@ -1,6 +1,10 @@
 package api_schichtTest;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -10,9 +14,14 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+
 import api_schicht.MediaResource;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -20,6 +29,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import datenzugriffsschicht.Book;
 import datenzugriffsschicht.Disc;
 import edu.hm.TestInjector;
+import edu.hm.TestInjector2;
 import geschaeftslogik.MediaService;
 import geschaeftslogik.MediaServiceResult;
 import geschaeftslogik.UserServiceImpl;
@@ -34,10 +44,11 @@ public class MediaResourceTest extends JerseyTest {
 //CHECKSTYLE:OFF
 
     private MediaService serviceMock;
+    private Injector injector;
     
     private Book[] books = {
-            new Book("a", "a", "978-1-4028-9462-6"),
-            new Book("b", "b", "978-3-16-148410-0")
+            new Book("a", "a", "9781402894626"),
+            new Book("b", "b", "9783161484100")
     };
     
     private Disc[] discs = {
@@ -47,15 +58,27 @@ public class MediaResourceTest extends JerseyTest {
 
     @Override
     protected Application configure() {
-        serviceMock = TestInjector.getInjector().getInstance(MediaService.class);
+        
+        
+        injector = TestInjector2.getInjectorInstance();
+        serviceMock = injector.getInstance(MediaService.class);
         return new ResourceConfig().register(MediaResource.class)
-                .register(TestInjector.class);
+                .register(TestInjector2.class);
     }
     
     @BeforeClass
     public static void setUp2() {
-        UserServiceImpl us = new UserServiceImpl();
-        us.createToken("admin", "admin");
+        //UserServiceImpl us = new UserServiceImpl();
+        //us.createToken("admin", "admin");
+        Client client = ClientBuilder.newClient();
+        WebTarget resource = client.target("http://localhost:8080/shareit/users/authenticate/admin/admin");
+        Builder request = resource.request();
+        request.accept(MediaType.APPLICATION_JSON);
+        Response response = request.get();
+        if(response.getStatus() == 200)
+            System.out.println("logged in with Token 0");
+        else
+            System.out.println("Failed with Code " + response.getStatus() + " maybe Server not running?");
     }
     
     @Test
@@ -82,7 +105,7 @@ public class MediaResourceTest extends JerseyTest {
         when(serviceMock.getBook("978-1-4028-9462-6")).thenReturn(books[0]);
         Response response = target("media/books/978-1-4028-9462-6/0").request().get();
         assertEquals(200, response.getStatus());
-        assertEquals("{\"title\":\"a\",\"author\":\"a\",\"isbn\":\"978-1-4028-9462-6\"}", response.readEntity(String.class));
+        assertEquals("{\"title\":\"a\",\"isbn\":\"9781402894626\",\"author\":\"a\"}", response.readEntity(String.class));
     }
     
     @Test
@@ -98,7 +121,7 @@ public class MediaResourceTest extends JerseyTest {
         when(serviceMock.getBooks()).thenReturn(books);
         Response response = target("media/books/0").request().get();
         assertEquals(200, response.getStatus());
-        assertEquals("[{\"title\":\"a\",\"author\":\"a\",\"isbn\":\"978-1-4028-9462-6\"},{\"title\":\"b\",\"author\":\"b\",\"isbn\":\"978-3-16-148410-0\"}]", response.readEntity(String.class));
+        assertEquals("[{\"title\":\"a\",\"isbn\":\"9781402894626\",\"author\":\"a\"},{\"title\":\"b\",\"isbn\":\"9783161484100\",\"author\":\"b\"}]", response.readEntity(String.class));
     }
     
     @Test

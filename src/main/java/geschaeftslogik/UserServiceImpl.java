@@ -48,6 +48,7 @@ public class UserServiceImpl implements UserService {
     
     @Override
     public TokenResult createToken(String user, String pwd) {
+        System.out.println("createToken - userService");
         User u = authenticateUser(user, pwd);
         if (u == null) {
             return TokenResult.INVALID;
@@ -69,7 +70,8 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public TokenResult validateToken(String token) {      
+    public TokenResult validateToken(String token) {   
+        System.out.println("validateToken - userService");
         Date now = new Date();
         for (Entry<Token, User> e: tokenUserMap.entrySet()) {
             if (e.getKey().getToken().equals(token) && now.before(e.getKey().getDate())) {

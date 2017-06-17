@@ -14,7 +14,8 @@
 		<init-param>  
 		  <param-name>jersey.config.server.provider.packages</param-name>  
 	      <param-value>edu.hm</param-value>
-	     </init-param>  
+	     </init-param>
+	       
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 

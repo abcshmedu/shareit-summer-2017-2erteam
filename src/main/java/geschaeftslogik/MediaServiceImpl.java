@@ -3,6 +3,9 @@ package geschaeftslogik;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import datenzugriffsschicht.Book;
 import datenzugriffsschicht.Disc;
 import datenzugriffsschicht.Medium;
@@ -14,14 +17,17 @@ import persistence.PersistenceImpl;
  * @author Altvatter Robert, Groﬂbeck Thomas
  *
  */
+@Singleton
 public class MediaServiceImpl implements MediaService {
     
     public static final int ISBN_LENGTH = 13;
+    
     private Persistence pers;
     
     /**
      * Constructs a MediaService instance.
      */
+    //@Inject
     public MediaServiceImpl() {
         pers = new PersistenceImpl();
     }
@@ -117,7 +123,7 @@ public class MediaServiceImpl implements MediaService {
 //            }
 //        }
 //        return false;
-        return pers.exist(Book.class, isbn);
+        return pers.exist(Book.class, isbn.replaceAll("-", ""));
     }
     
     /**
@@ -127,7 +133,7 @@ public class MediaServiceImpl implements MediaService {
      */
     public boolean searchDisc(String barcode) {
         for (Disc d : pers.getAll(Disc.class)) {
-            if (d.getBarcode().equals(barcode)) {
+            if (d.getBarcode().equals(barcode.replaceAll("-", ""))) {
                 return true;
             }
         }
@@ -158,8 +164,9 @@ public class MediaServiceImpl implements MediaService {
     
     @Override
     public Book getBook(String isbn) {
+        
         for (Book b : pers.getAll(Book.class)) {
-            if (b.getIsbn().equals(isbn)) {
+            if (b.getIsbn().equals(isbn.replaceAll("-",""))) {
                 return b;
             }
         }
@@ -169,7 +176,7 @@ public class MediaServiceImpl implements MediaService {
     @Override
     public Disc getDisc(String barcode) {
         for (Disc d : pers.getAll(Disc.class)) {
-            if (d.getBarcode().equals(barcode)) {
+            if (d.getBarcode().equals(barcode.replaceAll("-",""))) {
                 return d;
             }
         }

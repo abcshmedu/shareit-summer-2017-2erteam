@@ -1,6 +1,8 @@
 package api_schicht;
 
 import javax.inject.Inject;
+//import com.google.inject.Inject;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -21,8 +23,10 @@ import org.json.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+
 import datenzugriffsschicht.*;
 import geschaeftslogik.MediaService;
+import geschaeftslogik.MediaServiceImpl;
 import geschaeftslogik.MediaServiceResult;
 
 /**
@@ -34,23 +38,15 @@ import geschaeftslogik.MediaServiceResult;
 public class MediaResource {
 
     private static final int OK = 200;
-
-    private final MediaService mediaService;
-    
-    /**
-     * Constructs a media service.
-     */
-//    public MediaResource() {
-//        mediaService = new MediaServiceImpl();
-//    }
-    
-    /**
-     * Constructors a media service.
-     * @param service media service
-     */
-    @Inject
+    private MediaService mediaService;
+    //Inject produziert auch nach Tage langer Fehlersuche weiterhin Fehler (im ProduktivCode - beim testen Problemlos - es scheint als wäre die Konfiguration falsch und er findet seinen default Injector nicht)
+    //@Inject
     public MediaResource(MediaService service) {
         mediaService = service;
+    }
+    // um funktionalität zu ermöglichen: Default-Konstruktor.
+    public MediaResource() {
+        mediaService = new MediaServiceImpl();
     }
     
     /**
@@ -95,6 +91,7 @@ public class MediaResource {
     @Path("/books/{token}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getBooks(@PathParam("token")String token) {
+        System.out.println("getBooks - MediaResource");
         try {
             if (validateToken(token)) {
                 return Response.status(Response.Status.OK)
@@ -312,17 +309,11 @@ public class MediaResource {
      */
     private boolean validateToken(String token) {
         Client client = ClientBuilder.newClient();
-        WebTarget resource = client.target("http://localhost:8080/shareit/users/" + token);
+        WebTarget resource = client.target("http://frozen-coast-96197.herokuapp.com/shareit/users/" + token);
         Builder request = resource.request();
         request.accept(MediaType.APPLICATION_JSON);
         Response response = request.get();
-        /*
-        if (response.getStatus() == OK) {
-            return true;
-        } else {
-            return false;
-        }
-        */
+        boolean test  = response.getStatus() == OK;
         return response.getStatus() == OK;
     }
     

@@ -1,4 +1,9 @@
-/*C3*/SET SCHEMA PUBLIC
+/*C4*/SET SCHEMA PUBLIC
+drop table Book if exists
+drop table Disc if exists
+create table Book (isbn varchar(255) not null, title varchar(255), author varchar(255), primary key (isbn))
+create table Disc (barcode varchar(255) not null, title varchar(255), director varchar(255), fsk integer not null, primary key (barcode))
+/*C5*/SET SCHEMA PUBLIC
 drop table Book if exists
 drop table Disc if exists
 create table Book (isbn varchar(255) not null, title varchar(255), author varchar(255), primary key (isbn))
