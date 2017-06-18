@@ -14,14 +14,11 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 import api_schicht.MediaResource;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -29,10 +26,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import datenzugriffsschicht.Book;
 import datenzugriffsschicht.Disc;
 import edu.hm.TestInjector;
-import edu.hm.TestInjector2;
 import geschaeftslogik.MediaService;
 import geschaeftslogik.MediaServiceResult;
-import geschaeftslogik.UserServiceImpl;
 
 
 /**
@@ -60,10 +55,10 @@ public class MediaResourceTest extends JerseyTest {
     protected Application configure() {
         
         
-        injector = TestInjector2.getInjectorInstance();
+        injector = TestInjector.getInjectorInstance();
         serviceMock = injector.getInstance(MediaService.class);
         return new ResourceConfig().register(MediaResource.class)
-                .register(TestInjector2.class);
+                .register(TestInjector.class);
     }
     
     @BeforeClass
@@ -71,7 +66,7 @@ public class MediaResourceTest extends JerseyTest {
         //UserServiceImpl us = new UserServiceImpl();
         //us.createToken("admin", "admin");
         Client client = ClientBuilder.newClient();
-        WebTarget resource = client.target("http://localhost:8080/shareit/users/authenticate/admin/admin");
+        WebTarget resource = client.target("http://frozen-coast-96197.herokuapp.com/shareit/users/authenticate/admin/admin");
         Builder request = resource.request();
         request.accept(MediaType.APPLICATION_JSON);
         Response response = request.get();
@@ -83,12 +78,14 @@ public class MediaResourceTest extends JerseyTest {
     
     @Test
     public void testCreateBook() {
+        String help = "";
         when(serviceMock.addBook(any(Book.class))).thenReturn(MediaServiceResult.OK);
         Entity<Book> entity = Entity.entity(books[0], MediaType.APPLICATION_JSON);
         Response response = target("media/books/0").request().post(entity);
-        System.out.println(response.readEntity(String.class));
+        help = response.readEntity(String.class);
+        System.out.println(help);
         assertEquals(200, response.getStatus());
-        assertEquals("{\"code\":200,\"detail\":\"successful\"}", response.readEntity(String.class));
+        assertEquals("{\"code\":200,\"detail\":\"successful\"}", help);
     }
     
     @Test

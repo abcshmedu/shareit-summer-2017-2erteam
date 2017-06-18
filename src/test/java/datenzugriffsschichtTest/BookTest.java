@@ -17,7 +17,7 @@ public class BookTest {
     private Book b;
     @Before
     public void setUp() {
-        b = new Book("TestBuch", "Testautor", "1234");
+        b = new Book("TestBuch", "Testautor", "9783551714435");
     }
     
     @Test
@@ -27,12 +27,12 @@ public class BookTest {
     
     @Test
     public void testEquals() {
-        assertEquals(new Book("TestBuch", "Testautor", "1234"), b);
+        assertEquals(new Book("TestBuch", "Testautor", "9783551714435"), b);
         assertNotSame(new Book(), b);
     }
     
     @Test
     public void testHashCode() {
-        assertEquals(-1230394150, b.hashCode());
+        assertEquals(1779586476, b.hashCode());
     }
 }

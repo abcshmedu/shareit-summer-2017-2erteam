@@ -3,7 +3,7 @@ package edu.hm;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-import javax.persistence.Persistence;
+import persistence.Persistence;
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
 
@@ -44,6 +44,13 @@ public class TestInjector implements Feature {
      * @return injector
      */
     public static Injector getInjector() {
+        return INJECTOR;
+    }
+    /**
+     * This method is only required for the HK2-Guice-Bridge in the Application class.
+     * @return Injector instance.
+     */
+    public static Injector getInjectorInstance() {
         return INJECTOR;
     }
 }

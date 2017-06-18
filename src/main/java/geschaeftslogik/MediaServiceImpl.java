@@ -27,14 +27,21 @@ public class MediaServiceImpl implements MediaService {
     /**
      * Constructs a MediaService instance.
      */
-    //@Inject
     public MediaServiceImpl() {
         pers = new PersistenceImpl();
+    }
+    /**
+     * Constructs a MediaService instance.
+     */
+    @Inject
+    public MediaServiceImpl(Persistence p) {
+        pers = p;
     }
     
     @Override
     public MediaServiceResult addBook(Book b) {
-        b.setIsbn(b.getIsbn().replaceAll("-", ""));
+        if(b.getIsbn()!=null)
+            b.setIsbn(b.getIsbn().replaceAll("-", ""));
         if (!testCode(b.getIsbn()) || "".equals(b.getAuthor()) || "".equals(b.getTitle())) {
             return MediaServiceResult.BAD_REQUEST;
         }  
@@ -53,7 +60,8 @@ public class MediaServiceImpl implements MediaService {
     
     @Override
     public MediaServiceResult addDisc(Disc d) {
-        d.setBarcode(d.getBarcode().replaceAll("-", ""));
+        if(d.getBarcode()!=null)
+            d.setBarcode(d.getBarcode().replaceAll("-", ""));
         if (!testCode(d.getBarcode()) || "".equals(d.getDirector()) || "".equals(d.getTitle())) {
             return MediaServiceResult.BAD_REQUEST;
         }
@@ -117,12 +125,6 @@ public class MediaServiceImpl implements MediaService {
      * @return true if the book is in the system.
      */
     public boolean searchBook(String isbn) {
-//        for (Book b : pers.getAll(Book.class)) {
-//            if (b.getIsbn().equals(isbn)) {
-//                return true;
-//            }
-//        }
-//        return false;
         return pers.exist(Book.class, isbn.replaceAll("-", ""));
     }
     
@@ -189,8 +191,11 @@ public class MediaServiceImpl implements MediaService {
      * @return true if the code is valid
      */
     public boolean testCode(String toTest) {
-        toTest = toTest.replace("-", "");
-        if (toTest == null || toTest.length() != ISBN_LENGTH) {
+        if(toTest == null)
+            return false;
+        else
+            toTest = toTest.replace("-", "");
+        if (toTest.length() != ISBN_LENGTH) {
             return false;
         }
         ArrayList<Integer> ints = convString(toTest);

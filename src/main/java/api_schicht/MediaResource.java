@@ -40,7 +40,7 @@ public class MediaResource {
     private static final int OK = 200;
     private MediaService mediaService;
     //Inject produziert auch nach Tage langer Fehlersuche weiterhin Fehler (im ProduktivCode - beim testen Problemlos - es scheint als wäre die Konfiguration falsch und er findet seinen default Injector nicht)
-    //@Inject
+    @Inject
     public MediaResource(MediaService service) {
         mediaService = service;
     }
